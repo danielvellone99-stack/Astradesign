@@ -3,285 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AstraDesign - Crea gratis</title>
+    <title>CodeForge Astra - Dev Toolkit</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans pb-24">
+<body class="bg-slate-950 text-slate-100 font-sans pb-24">
 
     <!-- HEADER -->
-    <header class="flex justify-between items-center px-4 py-3 bg-white shadow-sm sticky top-0 z-40">
+    <header class="flex justify-between items-center px-4 py-3 bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-md">
         <div class="flex items-center space-x-2">
-            <h1 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">AstraDesign</h1>
-            <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-medium">100% Gratis</span>
-        </div>
-        <div class="flex items-center space-x-3">
-            <button id="btn-create-top" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1.5 rounded-full text-sm font-medium transition shadow-sm">
-                <i class="fa-solid fa-plus mr-1"></i> Crea
-            </button>
-            <div class="w-8 h-8 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold text-sm">
-                DV
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-code"></i>
             </div>
+            <h1 class="text-lg font-bold tracking-wide text-white">CodeForge <span class="text-emerald-400">Astra</span></h1>
         </div>
+        <span class="text-xs bg-slate-800 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-mono">v1.0 Pro</span>
     </header>
 
-    <!-- MAIN APP CONTAINER -->
-    <main id="main-container" class="max-w-md mx-auto p-4">
-        
-        <!-- VISTA HOMEPAGE -->
-        <div id="view-home" class="view-section">
-            <!-- HERO BANNER -->
-            <div class="bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 rounded-2xl p-5 text-white shadow-md mb-6">
-                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-md font-semibold uppercase tracking-wider">Gratis per sempre</span>
-                <h2 class="text-2xl font-bold mt-2 mb-3">Che cosa vuoi creare oggi?</h2>
-                <div class="relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
-                    <input type="text" id="search-input" placeholder="Cosa creiamo oggi?" class="w-full pl-10 pr-4 py-3 rounded-xl text-gray-800 bg-white shadow-inner focus:outline-none focus:ring-2 focus:ring-purple-300">
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-md mx-auto p-4 space-y-4">
+
+        <!-- TAB 1: FORMATTAZIONE & JSON -->
+        <div id="section-json" class="tool-section space-y-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-brackets-curly text-emerald-400 mr-1"></i> Formattatore JSON</label>
+                    <button onclick="clearText('json-input')" class="text-xs text-slate-500 hover:text-red-400"><i class="fa-solid fa-trash-can mr-1"></i> Pulisci</button>
                 </div>
-            </div>
-
-            <!-- CATEGORIES -->
-            <h3 class="font-bold text-gray-700 mb-3">Scegli come iniziare</h3>
-            <div class="grid grid-cols-4 gap-3 mb-6">
-                <button onclick="openEditor('Social')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
-                    <div class="w-12 h-12 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-heart"></i></div>
-                    <span class="text-xs font-medium text-gray-600">Social</span>
-                </button>
-                <button onclick="openEditor('Presentazione')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
-                    <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-laptop"></i></div>
-                    <span class="text-xs font-medium text-gray-600">Presentazione</span>
-                </button>
-                <button onclick="openEditor('Video')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
-                    <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-video"></i></div>
-                    <span class="text-xs font-medium text-gray-600">Video</span>
-                </button>
-                <button onclick="openEditor('Custom')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
-                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <span class="text-xs font-medium text-gray-600">Custom</span>
-                </button>
-            </div>
-
-            <!-- RECENT SECTION -->
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold text-gray-700">Continua a creare</h3>
-                <button onclick="switchTab('progetti')" class="text-xs font-semibold text-purple-600">Mostra tutto</button>
-            </div>
-            <div id="recent-projects-list" class="bg-white rounded-2xl p-6 text-center border border-dashed border-gray-200 text-gray-400">
-                <i class="fa-solid fa-folder-open text-3xl mb-2 text-purple-300"></i>
-                <p class="text-sm">Nessun progetto recente. Inizia subito a crearne uno!</p>
-            </div>
-        </div>
-
-        <!-- VISTA PROGETTI -->
-        <div id="view-progetti" class="view-section hidden">
-            <h2 class="text-xl font-bold mb-4">I tuoi Progetti</h2>
-            <div id="projects-container" class="space-y-3">
-                <!-- I progetti salvati appariranno qui -->
-            </div>
-        </div>
-
-        <!-- VISTA MODELLI -->
-        <div id="view-modelli" class="view-section hidden">
-            <h2 class="text-xl font-bold mb-4">Modelli pronti</h2>
-            <div class="grid grid-cols-2 gap-3">
-                <div onclick="openEditor('Template Instagram')" class="bg-gradient-to-br from-purple-500 to-indigo-600 h-36 rounded-2xl p-4 text-white flex flex-col justify-between cursor-pointer shadow-md">
-                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded w-max">Social</span>
-                    <span class="font-bold">Post Instagram</span>
-                </div>
-                <div onclick="openEditor('Template YouTube')" class="bg-gradient-to-br from-red-500 to-pink-600 h-36 rounded-2xl p-4 text-white flex flex-col justify-between cursor-pointer shadow-md">
-                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded w-max">Video</span>
-                    <span class="font-bold">Miniatura YouTube</span>
+                <textarea id="json-input" placeholder="Incolla qui il tuo JSON o codice disordinato..." class="w-full h-32 bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm font-mono text-emerald-300 focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+                
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button onclick="formatJSON()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center justify-center">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Beautify / Formatta
+                    </button>
+                    <button onclick="minifyJSON()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-slate-700 flex items-center justify-center">
+                        <i class="fa-solid fa-compress mr-1.5"></i> Minifica
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA ASTRA AI -->
-        <div id="view-astra-ai" class="view-section hidden">
-            <div class="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-6 text-white text-center mb-4 shadow-md">
-                <i class="fa-solid fa-wand-magic-sparkles text-4xl mb-2 text-yellow-300"></i>
-                <h2 class="text-xl font-bold">Astra AI Assistant</h2>
-                <p class="text-xs text-purple-200 mt-1">Genera idee e contenuti grafici con l'intelligenza artificiale.</p>
-            </div>
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-                <textarea id="ai-prompt" placeholder="Descrivi cosa vuoi creare (es. un volantino per una festa)..." class="w-full p-3 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-300 mb-3 h-24"></textarea>
-                <button onclick="generateAI()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-medium transition shadow-sm">Genera con AI</button>
-            </div>
-        </div>
-
-        <!-- VISTA ALTRO -->
-        <div id="view-altro" class="view-section hidden">
-            <h2 class="text-xl font-bold mb-4">Impostazioni e Info</h2>
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y">
-                <div class="p-4 flex items-center justify-between">
-                    <span class="font-medium text-sm">Versione App</span>
-                    <span class="text-xs text-gray-400">AstraDesign v1.0 (Online)</span>
+        <!-- TAB 2: BASE64 TOOL -->
+        <div id="section-base64" class="tool-section hidden space-y-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-lock text-cyan-400 mr-1"></i> Base64 Encoder / Decoder</label>
+                    <button onclick="clearText('base64-input')" class="text-xs text-slate-500 hover:text-red-400"><i class="fa-solid fa-trash-can mr-1"></i> Pulisci</button>
                 </div>
-                <div class="p-4 flex items-center justify-between">
-                    <span class="font-medium text-sm">Creatore</span>
-                    <span class="text-xs font-purple font-semibold text-purple-600">Daniel Vellone</span>
-                </div>
-                <div class="p-4 flex items-center justify-between">
-                    <span class="font-medium text-sm">Hosting</span>
-                    <span class="text-xs text-gray-400">GitHub Pages</span>
+                <textarea id="base64-input" placeholder="Scrivi il testo o la stringa Base64..." class="w-full h-32 bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm font-mono text-cyan-300 focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button onclick="encodeBase64()" class="bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center justify-center">
+                        <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Codifica
+                    </button>
+                    <button onclick="decodeBase64()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-slate-700 flex items-center justify-center">
+                        <i class="fa-solid fa-file-arrow-down mr-1.5"></i> Decodifica
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- EDITOR CANVAS ( nascosto di default, si apre cliccando Crea ) -->
-        <div id="view-editor" class="view-section hidden">
-            <div class="flex items-center justify-between mb-4">
-                <button onclick="closeEditor()" class="text-gray-600 bg-white border px-3 py-1.5 rounded-xl text-sm font-medium shadow-sm">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> Indietro
+        <!-- TAB 3: STATISTICHE TESTO -->
+        <div id="section-stats" class="tool-section hidden space-y-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm">
+                <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block"><i class="fa-solid fa-chart-bar text-purple-400 mr-1"></i> Analizzatore di Codice / Testo</label>
+                <textarea id="stats-input" oninput="updateStats()" placeholder="Digita o incolla del testo per analizzarlo in tempo reale..." class="w-full h-32 bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm font-mono text-purple-300 focus:outline-none focus:border-purple-500 resize-none"></textarea>
+                
+                <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+                    <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl">
+                        <span id="stat-chars" class="block text-lg font-bold text-white">0</span>
+                        <span class="text-[10px] text-slate-400 uppercase">Caratteri</span>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl">
+                        <span id="stat-words" class="block text-lg font-bold text-white">0</span>
+                        <span class="text-[10px] text-slate-400 uppercase">Parole</span>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl">
+                        <span id="stat-lines" class="block text-lg font-bold text-white">0</span>
+                        <span class="text-[10px] text-slate-400 uppercase">Righe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: MIEI SNIPPET (LOCAL STORAGE) -->
+        <div id="section-snippets" class="tool-section hidden space-y-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm space-y-3">
+                <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bookmark text-amber-400 mr-1"></i> Salva i tuoi Snippet</label>
+                <input type="text" id="snippet-title" placeholder="Titolo dello script (es. Bot Python Webhook)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                <textarea id="snippet-code" placeholder="Incolla il codice da salvare..." class="w-full h-24 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-amber-300 focus:outline-none focus:border-amber-500 resize-none"></textarea>
+                <button onclick="saveSnippet()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold py-2.5 rounded-xl text-xs transition shadow-sm">
+                    <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salva nel Browser
                 </button>
-                <h2 id="editor-title-label" class="font-bold text-purple-700">Nuovo Design</h2>
-                <button onclick="saveProject()" class="bg-green-600 text-white px-4 py-1.5 rounded-xl text-sm font-medium shadow-sm">Salva</button>
             </div>
-            <!-- Area di lavoro / Canvas -->
-            <div id="canvas-area" class="w-full h-80 bg-white rounded-2xl shadow-md border border-gray-200 relative flex items-center justify-center overflow-hidden mb-4">
-                <p id="canvas-placeholder" class="text-gray-400 text-sm pointer-events-none">Il tuo spazio creativo</p>
+
+            <div id="snippets-list" class="space-y-2">
+                <!-- I frammenti salvati appariranno qui -->
             </div>
-            <!-- Strumenti Editor -->
-            <div class="grid grid-cols-3 gap-2">
-                <button onclick="addElement('text')" class="bg-white p-3 rounded-xl border text-xs font-medium shadow-sm hover:bg-purple-50 transition"><i class="fa-solid fa-font text-purple-600 mb-1 block text-base"></i> Aggiungi Testo</button>
-                <button onclick="addElement('shape')" class="bg-white p-3 rounded-xl border text-xs font-medium shadow-sm hover:bg-purple-50 transition"><i class="fa-solid fa-square text-purple-600 mb-1 block text-base"></i> Aggiungi Forma</button>
-                <button onclick="changeCanvasColor()" class="bg-white p-3 rounded-xl border text-xs font-medium shadow-sm hover:bg-purple-50 transition"><i class="fa-solid fa-palette text-purple-600 mb-1 block text-base"></i> Colore Sfondo</button>
+        </div>
+
+        <!-- OUTPUT BOX CONDIVISO -->
+        <div id="output-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm hidden">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider"><i class="fa-solid fa-terminal mr-1"></i> Risultato</span>
+                <button onclick="copyOutput()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition"><i class="fa-solid fa-copy mr-1"></i> Copia</button>
             </div>
+            <pre id="output-content" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 overflow-x-auto max-h-40 whitespace-pre-wrap"></pre>
         </div>
 
     </main>
 
-    <!-- BOTTOM NAVIGATION BAR -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-2 px-6 flex justify-between items-center z-40 max-w-md mx-auto shadow-lg">
-        <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center text-purple-600" data-tab="home">
-            <i class="fa-solid fa-house text-lg"></i>
-            <span class="text-[10px] mt-1 font-medium">Homepage</span>
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 py-2 px-4 flex justify-around items-center z-40 max-w-md mx-auto shadow-xl">
+        <button onclick="switchTab('json')" class="nav-btn flex flex-col items-center text-emerald-400" data-tab="json">
+            <i class="fa-solid fa-brackets-curly text-base"></i>
+            <span class="text-[10px] mt-1 font-medium">JSON</span>
         </button>
-        <button onclick="switchTab('progetti')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="progetti">
-            <i class="fa-solid fa-folder text-lg"></i>
-            <span class="text-[10px] mt-1 font-medium">Progetti</span>
+        <button onclick="switchTab('base64')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-slate-300" data-tab="base64">
+            <i class="fa-solid fa-lock text-base"></i>
+            <span class="text-[10px] mt-1 font-medium">Base64</span>
         </button>
-        <button onclick="switchTab('modelli')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="modelli">
-            <i class="fa-solid fa-shapes text-lg"></i>
-            <span class="text-[10px] mt-1 font-medium">Modelli</span>
+        <button onclick="switchTab('stats')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-slate-300" data-tab="stats">
+            <i class="fa-solid fa-chart-bar text-base"></i>
+            <span class="text-[10px] mt-1 font-medium">Analisi</span>
         </button>
-        <button onclick="switchTab('astra-ai')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="astra-ai">
-            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-            <span class="text-[10px] mt-1 font-medium">Astra AI</span>
-        </button>
-        <button onclick="switchTab('altro')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="altro">
-            <i class="fa-solid fa-ellipsis text-lg"></i>
-            <span class="text-[10px] mt-1 font-medium">Altro</span>
+        <button onclick="switchTab('snippets')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-slate-300" data-tab="snippets">
+            <i class="fa-solid fa-bookmark text-base"></i>
+            <span class="text-[10px] mt-1 font-medium">Snippet</span>
         </button>
     </nav>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT -->
     <script>
-        let currentProjects = JSON.parse(localStorage.getItem('astradesign_projects')) || [];
+        let savedSnippets = JSON.parse(localStorage.getItem('codeforge_snippets')) || [];
 
         function switchTab(tabName) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById('view-' + tabName).classList.remove('hidden');
+            document.querySelectorAll('.tool-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('section-' + tabName).classList.remove('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-purple-600');
-                btn.classList.add('text-gray-400');
+                btn.classList.remove('text-emerald-400');
+                btn.classList.add('text-slate-500');
                 if(btn.getAttribute('data-tab') === tabName) {
-                    btn.classList.remove('text-gray-400');
-                    btn.classList.add('text-purple-600');
+                    btn.classList.remove('text-slate-500');
+                    btn.classList.add('text-emerald-400');
                 }
             });
 
-            if(tabName === 'progetti') renderProjects();
+            if(tabName === 'snippets') renderSnippets();
         }
 
-        document.getElementById('btn-create-top').addEventListener('click', () => {
-            openEditor('Nuovo Design');
-        });
-
-        function openEditor(title) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById('view-editor').classList.remove('hidden');
-            document.getElementById('editor-title-label').innerText = title;
-            document.getElementById('canvas-area').innerHTML = '<p id="canvas-placeholder" class="text-gray-400 text-sm pointer-events-none">Spazio di lavoro per ' + title + '</p>';
+        function showOutput(text) {
+            const box = document.getElementById('output-box');
+            const content = document.getElementById('output-content');
+            box.classList.remove('hidden');
+            content.innerText = text;
         }
 
-        function closeEditor() {
-            switchTab('home');
+        function clearText(elementId) {
+            document.getElementById(elementId).value = '';
+            document.getElementById('output-box').classList.add('hidden');
         }
 
-        function addElement(type) {
-            const canvas = document.getElementById('canvas-area');
-            const placeholder = document.getElementById('canvas-placeholder');
-            if(placeholder) placeholder.remove();
-
-            const el = document.createElement('div');
-            el.className = "absolute p-3 cursor-move bg-purple-100 border border-purple-300 rounded-lg shadow-sm text-sm font-medium text-purple-800";
-            el.style.top = Math.random() * 150 + 'px';
-            el.style.left = Math.random() * 150 + 'px';
-
-            if(type === 'text') {
-                el.innerText = "Doppio click per modificare";
-            } else {
-                el.style.width = "60px";
-                el.style.height = "60px";
-                el.style.backgroundColor = "#9333ea";
+        function formatJSON() {
+            try {
+                const val = document.getElementById('json-input').value;
+                const parsed = JSON.parse(val);
+                showOutput(JSON.stringify(parsed, null, 4));
+            } catch (e) {
+                showOutput('Errore JSON non valido: ' + e.message);
             }
-            canvas.appendChild(el);
         }
 
-        function changeCanvasColor() {
-            const canvas = document.getElementById('canvas-area');
-            const colors = ['#ffffff', '#f3f4f6', '#ede9fe', '#fee2e2', '#dcfce7'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            canvas.style.backgroundColor = randomColor;
+        function minifyJSON() {
+            try {
+                const val = document.getElementById('json-input').value;
+                const parsed = JSON.parse(val);
+                showOutput(JSON.stringify(parsed));
+            } catch (e) {
+                showOutput('Errore JSON non valido: ' + e.message);
+            }
         }
 
-        function saveProject() {
-            const title = document.getElementById('editor-title-label').innerText;
-            currentProjects.push({ title: title, date: new Date().toLocaleDateString() });
-            localStorage.setItem('astradesign_projects', JSON.stringify(currentProjects));
-            alert('Progetto salvato con successo!');
-            switchTab('progetti');
+        function encodeBase64() {
+            try {
+                const val = document.getElementById('base64-input').value;
+                const encoded = btoa(unescape(encodeURIComponent(val)));
+                showOutput(encoded);
+            } catch (e) {
+                showOutput('Errore di codifica: ' + e.message);
+            }
         }
 
-        function renderProjects() {
-            const container = document.getElementById('projects-container');
-            if(currentProjects.length === 0) {
-                container.innerHTML = '<div class="bg-white rounded-2xl p-6 text-center border border-dashed border-gray-200 text-gray-400"><p class="text-sm">Nessun progetto salvato finora.</p></div>';
+        function decodeBase64() {
+            try {
+                const val = document.getElementById('base64-input').value;
+                const decoded = decodeURIComponent(escape(atob(val)));
+                showOutput(decoded);
+            } catch (e) {
+                showOutput('Errore di decodifica (stringa non valida): ' + e.message);
+            }
+        }
+
+        function updateStats() {
+            const val = document.getElementById('stats-input').value;
+            document.getElementById('stat-chars').innerText = val.length;
+            document.getElementById('stat-words').innerText = val.trim() === '' ? 0 : val.trim().split(/\s+/).length;
+            document.getElementById('stat-lines').innerText = val.split('\n').length;
+        }
+
+        function copyOutput() {
+            const text = document.getElementById('output-content').innerText;
+            navigator.clipboard.writeText(text);
+            alert('Copiato negli appunti!');
+        }
+
+        function saveSnippet() {
+            const title = document.getElementById('snippet-title').value;
+            const code = document.getElementById('snippet-code').value;
+            if(!title || !code) {
+                alert('Inserisci un titolo e del codice!');
                 return;
             }
-            container.innerHTML = '';
-            currentProjects.forEach((proj, idx) => {
-                container.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-800">${proj.title}</h4>
-                            <p class="text-xs text-gray-400">Creato il ${proj.date}</p>
+            savedSnippets.push({ title, code });
+            localStorage.setItem('codeforge_snippets', JSON.stringify(savedSnippets));
+            document.getElementById('snippet-title').value = '';
+            document.getElementById('snippet-code').value = '';
+            renderSnippets();
+            alert('Snippet salvato!');
+        }
+
+        function renderSnippets() {
+            const list = document.getElementById('snippets-list');
+            if(savedSnippets.length === 0) {
+                list.innerHTML = '<div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center text-slate-500 text-xs">Nessun snippet salvato.</div>';
+                return;
+            }
+            list.innerHTML = '';
+            savedSnippets.forEach((s, idx) => {
+                list.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xs text-amber-300">${s.title}</span>
+                            <div class="space-x-1">
+                                <button onclick="navigator.clipboard.writeText(${JSON.stringify(s.code)}); alert('Copiato!');" class="text-xs bg-slate-800 px-2 py-1 rounded text-slate-300">Copia</button>
+                                <button onclick="deleteSnippet(${idx})" class="text-xs bg-red-500/10 text-red-400 px-2 py-1 rounded">Elimina</button>
+                            </div>
                         </div>
-                        <button onclick="deleteProject(${idx})" class="text-red-500 hover:text-red-700 text-sm p-2"><i class="fa-solid fa-trash"></i></button>
+                        <pre class="bg-slate-950 p-2 rounded-lg text-[10px] font-mono text-slate-400 overflow-x-auto max-h-20">${s.code}</pre>
                     </div>
                 `;
             });
         }
 
-        function deleteProject(index) {
-            currentProjects.splice(index, 1);
-            localStorage.setItem('astradesign_projects', JSON.stringify(currentProjects));
-            renderProjects();
-        }
-
-        function generateAI() {
-            const prompt = document.getElementById('ai-prompt').value;
-            if(!prompt.trim()) {
-                alert('Scrivi qualcosa per l\'IA!');
-                return;
-            }
-            alert('Astra AI ha generato il design basato su: "' + prompt + '"!');
-            openEditor('AI: ' + prompt.substring(0, 15) + '...');
+        function deleteSnippet(index) {
+            savedSnippets.splice(index, 1);
+            localStorage.setItem('codeforge_snippets', JSON.stringify(savedSnippets));
+            renderSnippets();
         }
     </script>
 </body>
-                </html>
-    
+</html>
