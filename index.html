@@ -4,356 +4,284 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AstraDesign - Crea gratis</title>
-    <!-- Tailwind CSS per uno stile moderno e pulito -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome per le icone -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .bg-canva-gradient {
-            background: linear-gradient(135deg, #00c4cc 0%, #7d2ae7 50%, #b800ff 100%);
-        }
-        .text-gradient {
-            background: linear-gradient(135deg, #00c4cc, #7d2ae7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        /* Stili per il canvas interattivo */
-        #workspace {
-            touch-action: none;
-            user-select: none;
-        }
-    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans pb-20">
+<body class="bg-gray-50 text-gray-800 font-sans pb-24">
 
-    <!-- HEADER SUPERIORE -->
-    <header class="bg-white sticky top-0 z-50 border-b border-gray-100 px-4 py-3 flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-3">
-            <span class="text-xl font-black text-gradient tracking-wide">AstraDesign</span>
-            <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-semibold">100% Gratis</span>
+    <!-- HEADER -->
+    <header class="flex justify-between items-center px-4 py-3 bg-white shadow-sm sticky top-0 z-40">
+        <div class="flex items-center space-x-2">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">AstraDesign</h1>
+            <span class="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-medium">100% Gratis</span>
         </div>
         <div class="flex items-center space-x-3">
-            <button onclick="openEditor('Nuovo Progetto', 1080, 1080)" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow transition flex items-center space-x-1">
-                <i class="fa-solid fa-plus text-xs"></i>
-                <span>Crea</span>
+            <button id="btn-create-top" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1.5 rounded-full text-sm font-medium transition shadow-sm">
+                <i class="fa-solid fa-plus mr-1"></i> Crea
             </button>
-            <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+            <div class="w-8 h-8 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold text-sm">
                 DV
             </div>
         </div>
     </header>
 
-    <!-- CONTENUTO PRINCIPALE (SEZIONI) -->
-    <main class="max-w-md mx-auto p-4">
-
-        <!-- SEZIONE HOMEPAGE -->
-        <section id="view-home" class="space-y-6">
-            <!-- Banner di benvenuto -->
-            <div class="bg-canva-gradient rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
-                <div class="relative z-10">
-                    <span class="text-xs uppercase tracking-wider bg-white/20 px-2 py-1 rounded font-medium">Gratis per sempre</span>
-                    <h1 class="text-2xl font-bold mt-2">Che cosa vuoi creare oggi?</h1>
-                    <div class="mt-4 bg-white/90 backdrop-blur rounded-xl p-2 flex items-center shadow-inner text-gray-700">
-                        <i class="fa-solid fa-search text-gray-400 ml-2"></i>
-                        <input type="text" placeholder="Cosa creiamo oggi?" class="bg-transparent border-none outline-none w-full px-2 text-sm">
-                    </div>
+    <!-- MAIN APP CONTAINER -->
+    <main id="main-container" class="max-w-md mx-auto p-4">
+        
+        <!-- VISTA HOMEPAGE -->
+        <div id="view-home" class="view-section">
+            <!-- HERO BANNER -->
+            <div class="bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 rounded-2xl p-5 text-white shadow-md mb-6">
+                <span class="bg-white/20 text-xs px-2.5 py-1 rounded-md font-semibold uppercase tracking-wider">Gratis per sempre</span>
+                <h2 class="text-2xl font-bold mt-2 mb-3">Che cosa vuoi creare oggi?</h2>
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Cosa creiamo oggi?" class="w-full pl-10 pr-4 py-3 rounded-xl text-gray-800 bg-white shadow-inner focus:outline-none focus:ring-2 focus:ring-purple-300">
                 </div>
             </div>
 
-            <!-- Categorie rapide -->
-            <div>
-                <h2 class="font-bold text-gray-800 mb-3 text-base">Scegli come iniziare</h2>
-                <div class="grid grid-cols-4 gap-3 text-center">
-                    <div onclick="openEditor('Post Social', 1080, 1080)" class="cursor-pointer bg-white p-3 rounded-xl shadow-sm hover:shadow transition flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-heart"></i></div>
-                        <span class="text-xs font-medium">Social</span>
-                    </div>
-                    <div onclick="openEditor('Presentazione', 1920, 1080)" class="cursor-pointer bg-white p-3 rounded-xl shadow-sm hover:shadow transition flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-laptop"></i></div>
-                        <span class="text-xs font-medium">Presentazione</span>
-                    </div>
-                    <div onclick="openEditor('Video / Reel', 1080, 1920)" class="cursor-pointer bg-white p-3 rounded-xl shadow-sm hover:shadow transition flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-video"></i></div>
-                        <span class="text-xs font-medium">Video</span>
-                    </div>
-                    <div onclick="openEditor('Personalizzato', 1200, 800)" class="cursor-pointer bg-white p-3 rounded-xl shadow-sm hover:shadow transition flex flex-col items-center">
-                        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg mb-1"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                        <span class="text-xs font-medium">Custom</span>
-                    </div>
-                </div>
+            <!-- CATEGORIES -->
+            <h3 class="font-bold text-gray-700 mb-3">Scegli come iniziare</h3>
+            <div class="grid grid-cols-4 gap-3 mb-6">
+                <button onclick="openEditor('Social')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
+                    <div class="w-12 h-12 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-heart"></i></div>
+                    <span class="text-xs font-medium text-gray-600">Social</span>
+                </button>
+                <button onclick="openEditor('Presentazione')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
+                    <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-laptop"></i></div>
+                    <span class="text-xs font-medium text-gray-600">Presentazione</span>
+                </button>
+                <button onclick="openEditor('Video')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
+                    <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-video"></i></div>
+                    <span class="text-xs font-medium text-gray-600">Video</span>
+                </button>
+                <button onclick="openEditor('Custom')" class="flex flex-col items-center p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-300 transition">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-lg mb-2 shadow-inner"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <span class="text-xs font-medium text-gray-600">Custom</span>
+                </button>
             </div>
 
-            <!-- I tuoi recenti -->
-            <div>
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="font-bold text-gray-800 text-base">Continua a creare</h2>
-                    <span class="text-xs text-purple-600 font-semibold cursor-pointer" onclick="switchTab('projects')">Mostra tutto</span>
-                </div>
-                <div id="recent-projects-list" class="grid grid-cols-2 gap-3">
-                    <!-- Popolato dinamicamente da JS -->
-                </div>
+            <!-- RECENT SECTION -->
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-gray-700">Continua a creare</h3>
+                <button onclick="switchTab('progetti')" class="text-xs font-semibold text-purple-600">Mostra tutto</button>
             </div>
-        </section>
+            <div id="recent-projects-list" class="bg-white rounded-2xl p-6 text-center border border-dashed border-gray-200 text-gray-400">
+                <i class="fa-solid fa-folder-open text-3xl mb-2 text-purple-300"></i>
+                <p class="text-sm">Nessun progetto recente. Inizia subito a crearne uno!</p>
+            </div>
+        </div>
 
-        <!-- SEZIONE PROGETTI -->
-        <section id="view-projects" class="hidden space-y-4">
-            <h1 class="text-xl font-bold">I tuoi progetti</h1>
-            <div class="relative">
-                <input type="text" placeholder="Cerca tra i tuoi progetti..." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm outline-none">
+        <!-- VISTA PROGETTI -->
+        <div id="view-progetti" class="view-section hidden">
+            <h2 class="text-xl font-bold mb-4">I tuoi Progetti</h2>
+            <div id="projects-container" class="space-y-3">
+                <!-- I progetti salvati appariranno qui -->
             </div>
-            <div id="all-projects-list" class="space-y-3">
-                <!-- Popolato da JS -->
-            </div>
-        </section>
+        </div>
 
-        <!-- SEZIONE MODELLI -->
-        <section id="view-templates" class="hidden space-y-4">
-            <h1 class="text-xl font-bold">Modelli in primo piano</h1>
+        <!-- VISTA MODELLI -->
+        <div id="view-modelli" class="view-section hidden">
+            <h2 class="text-xl font-bold mb-4">Modelli pronti</h2>
             <div class="grid grid-cols-2 gap-3">
-                <div onclick="openEditor('Modello Volantino', 800, 1200)" class="bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer border border-gray-100">
-                    <div class="h-32 bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold">Volantino</div>
-                    <div class="p-2 text-xs font-medium">Volantino Moderno</div>
+                <div onclick="openEditor('Template Instagram')" class="bg-gradient-to-br from-purple-500 to-indigo-600 h-36 rounded-2xl p-4 text-white flex flex-col justify-between cursor-pointer shadow-md">
+                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded w-max">Social</span>
+                    <span class="font-bold">Post Instagram</span>
                 </div>
-                <div onclick="openEditor('Modello Logo', 800, 800)" class="bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer border border-gray-100">
-                    <div class="h-32 bg-gradient-to-r from-blue-500 to-teal-400 flex items-center justify-center text-white font-bold">Logo</div>
-                    <div class="p-2 text-xs font-medium">Logo Gaming / Tech</div>
+                <div onclick="openEditor('Template YouTube')" class="bg-gradient-to-br from-red-500 to-pink-600 h-36 rounded-2xl p-4 text-white flex flex-col justify-between cursor-pointer shadow-md">
+                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded w-max">Video</span>
+                    <span class="font-bold">Miniatura YouTube</span>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- SEZIONE AI -->
-        <section id="view-ai" class="hidden space-y-4">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center space-y-4">
-                <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-2xl">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                </div>
-                <h2 class="text-xl font-bold">Astra AI Design</h2>
-                <p class="text-sm text-gray-500">Quale sarà la prossima creazione che svilupperai?</p>
-                <div class="border border-gray-200 rounded-xl p-3 text-left bg-gray-50 flex items-center">
-                    <input type="text" id="ai-prompt" placeholder="Descrivi il design da generare..." class="bg-transparent outline-none w-full text-sm">
-                    <button onclick="triggerAI()" class="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm ml-2"><i class="fa-solid fa-paper-plane"></i></button>
-                </div>
+        <!-- VISTA ASTRA AI -->
+        <div id="view-astra-ai" class="view-section hidden">
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-6 text-white text-center mb-4 shadow-md">
+                <i class="fa-solid fa-wand-magic-sparkles text-4xl mb-2 text-yellow-300"></i>
+                <h2 class="text-xl font-bold">Astra AI Assistant</h2>
+                <p class="text-xs text-purple-200 mt-1">Genera idee e contenuti grafici con l'intelligenza artificiale.</p>
             </div>
-        </section>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <textarea id="ai-prompt" placeholder="Descrivi cosa vuoi creare (es. un volantino per una festa)..." class="w-full p-3 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-300 mb-3 h-24"></textarea>
+                <button onclick="generateAI()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-medium transition shadow-sm">Genera con AI</button>
+            </div>
+        </div>
 
-        <!-- SEZIONE ALTRO -->
-        <section id="view-more" class="hidden space-y-4">
-            <h1 class="text-xl font-bold">Profilo & Impostazioni</h1>
-            <div class="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3">
-                <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">DV</div>
-                <div>
-                    <h3 class="font-bold">Daniel Vellone</h3>
-                    <p class="text-xs text-gray-500">danielvellone99@gmail.com</p>
+        <!-- VISTA ALTRO -->
+        <div id="view-altro" class="view-section hidden">
+            <h2 class="text-xl font-bold mb-4">Impostazioni e Info</h2>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y">
+                <div class="p-4 flex items-center justify-between">
+                    <span class="font-medium text-sm">Versione App</span>
+                    <span class="text-xs text-gray-400">AstraDesign v1.0 (Online)</span>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <span class="font-medium text-sm">Creatore</span>
+                    <span class="text-xs font-purple font-semibold text-purple-600">Daniel Vellone</span>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <span class="font-medium text-sm">Hosting</span>
+                    <span class="text-xs text-gray-400">GitHub Pages</span>
                 </div>
             </div>
-            <div class="bg-white rounded-xl overflow-hidden shadow-sm divide-y divide-gray-100 text-sm font-medium">
-                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50"><span>Versione App</span><span class="text-gray-400">1.0.0 Free</span></div>
-                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50"><span>Tema scuro</span><span class="text-purple-600">Disattivato</span></div>
-                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 text-red-600" onclick="localStorage.clear(); alert('Cache pulita!'); location.reload();"><span>Cancella Dati Locali</span></div>
+        </div>
+
+        <!-- EDITOR CANVAS ( nascosto di default, si apre cliccando Crea ) -->
+        <div id="view-editor" class="view-section hidden">
+            <div class="flex items-center justify-between mb-4">
+                <button onclick="closeEditor()" class="text-gray-600 bg-white border px-3 py-1.5 rounded-xl text-sm font-medium shadow-sm">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Indietro
+                </button>
+                <h2 id="editor-title-label" class="font-bold text-purple-700">Nuovo Design</h2>
+                <button onclick="saveProject()" class="bg-green-600 text-white px-4 py-1.5 rounded-xl text-sm font-medium shadow-sm">Salva</button>
             </div>
-        </section>
+            <!-- Area di lavoro / Canvas -->
+            <div id="canvas-area" class="w-full h-80 bg-white rounded-2xl shadow-md border border-gray-200 relative flex items-center justify-center overflow-hidden mb-4">
+                <p id="canvas-placeholder" class="text-gray-400 text-sm pointer-events-none">Il tuo spazio creativo</p>
+            </div>
+            <!-- Strumenti Editor -->
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="addElement('text')" class="bg-white p-3 rounded-xl border text-xs font-medium shadow-sm hover:bg-purple-50 transition"><i class="fa-solid fa-font text-purple-600 mb-1 block text-base"></i> Aggiungi Testo</button>
+                <button onclick="addElement('shape')" class="bg-white p-3 rounded-xl border text-xs font-medium shadow-sm hover:bg-purple-50 transition"><i class="fa-solid fa-square text-purple-600 mb-1 block text-base"></i> Aggiungi Forma</button>
+                <button onclick="changeCanvasColor()" class="bg-white p-3 rounded-xl border text-xs font-medium shadow-sm hover:bg-purple-50 transition"><i class="fa-solid fa-palette text-purple-600 mb-1 block text-base"></i> Colore Sfondo</button>
+            </div>
+        </div>
 
     </main>
 
-    <!-- EDITOR GRAFICO (MODALE A SCHERMO INTERO) -->
-    <div id="editor-modal" class="fixed inset-0 bg-gray-900 z-50 hidden flex flex-col">
-        <!-- Top bar editor -->
-        <div class="bg-gray-800 text-white px-4 py-3 flex justify-between items-center border-b border-gray-700">
-            <button onclick="closeEditor()" class="text-gray-300 hover:text-white"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-            <span id="editor-title" class="font-bold text-sm">Progetto Senza Titolo</span>
-            <button onclick="saveAndDownload()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1">
-                <i class="fa-solid fa-download"></i><span>Scarica</span>
-            </button>
-        </div>
-
-        <!-- Canvas Area -->
-        <div class="flex-1 bg-gray-900 flex items-center justify-center p-4 overflow-auto relative">
-            <div id="workspace" class="bg-white shadow-2xl relative overflow-hidden rounded" style="width: 320px; height: 320px;">
-                <!-- Gli elementi creati finiscono qui -->
-            </div>
-        </div>
-
-        <!-- Toolbar inferiore dell'Editor -->
-        <div class="bg-gray-800 text-white p-3 flex justify-around items-center border-t border-gray-700 text-xs">
-            <button onclick="addTextElement()" class="flex flex-col items-center space-y-1 hover:text-purple-400"><i class="fa-solid fa-font text-lg"></i><span>Aggiungi Testo</span></button>
-            <button onclick="addShapeElement()" class="flex flex-col items-center space-y-1 hover:text-purple-400"><i class="fa-solid fa-square text-lg"></i><span>Forma</span></button>
-            <button onclick="changeBackground()" class="flex flex-col items-center space-y-1 hover:text-purple-400"><i class="fa-solid fa-palette text-lg"></i><span>Sfondo</span></button>
-            <button onclick="clearWorkspace()" class="flex flex-col items-center space-y-1 hover:text-red-400"><i class="fa-solid fa-trash text-lg"></i><span>Pulisci</span></button>
-        </div>
-    </div>
-
-    <!-- NAVBAR INFERIORE (stile mobile app) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-2 px-6 flex justify-around items-center z-40 shadow-lg">
-        <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center text-purple-600" data-target="home">
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-2 px-6 flex justify-between items-center z-40 max-w-md mx-auto shadow-lg">
+        <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center text-purple-600" data-tab="home">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] mt-1 font-medium">Homepage</span>
         </button>
-        <button onclick="switchTab('projects')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-gray-600" data-target="projects">
+        <button onclick="switchTab('progetti')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="progetti">
             <i class="fa-solid fa-folder text-lg"></i>
             <span class="text-[10px] mt-1 font-medium">Progetti</span>
         </button>
-        <button onclick="switchTab('templates')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-gray-600" data-target="templates">
+        <button onclick="switchTab('modelli')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="modelli">
             <i class="fa-solid fa-shapes text-lg"></i>
             <span class="text-[10px] mt-1 font-medium">Modelli</span>
         </button>
-        <button onclick="switchTab('ai')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-gray-600" data-target="ai">
+        <button onclick="switchTab('astra-ai')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="astra-ai">
             <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
             <span class="text-[10px] mt-1 font-medium">Astra AI</span>
         </button>
-        <button onclick="switchTab('more')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-gray-600" data-target="more">
+        <button onclick="switchTab('altro')" class="nav-btn flex flex-col items-center text-gray-400 hover:text-purple-600" data-tab="altro">
             <i class="fa-solid fa-ellipsis text-lg"></i>
             <span class="text-[10px] mt-1 font-medium">Altro</span>
         </button>
     </nav>
 
-    <!-- SCRIPT JAVASCRIPT PER LA LOGICA DELLA WEB APP -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Gestione delle sezioni
-        function switchTab(tabId) {
-            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
-            document.getElementById('view-' + tabId).classList.remove('hidden');
+        let currentProjects = JSON.parse(localStorage.getItem('astradesign_projects')) || [];
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + tabName).classList.remove('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('text-purple-600');
                 btn.classList.add('text-gray-400');
-                if(btn.getAttribute('data-target') === tabId) {
+                if(btn.getAttribute('data-tab') === tabName) {
                     btn.classList.remove('text-gray-400');
                     btn.classList.add('text-purple-600');
                 }
             });
-            loadProjects();
+
+            if(tabName === 'progetti') renderProjects();
         }
 
-        // Gestione Editor
-        let currentProjectName = '';
-        function openEditor(name, width, height) {
-            currentProjectName = name;
-            document.getElementById('editor-title').innerText = name;
-            document.getElementById('editor-modal').classList.remove('hidden');
+        document.getElementById('btn-create-top').addEventListener('click', () => {
+            openEditor('Nuovo Design');
+        });
+
+        function openEditor(title) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-editor').classList.remove('hidden');
+            document.getElementById('editor-title-label').innerText = title;
+            document.getElementById('canvas-area').innerHTML = '<p id="canvas-placeholder" class="text-gray-400 text-sm pointer-events-none">Spazio di lavoro per ' + title + '</p>';
         }
 
         function closeEditor() {
-            document.getElementById('editor-modal').classList.add('hidden');
-            saveProjectToStorage(currentProjectName);
+            switchTab('home');
         }
 
-        // Funzionalità dell'area di disegno
-        function addTextElement() {
-            const workspace = document.getElementById('workspace');
-            const textEl = document.createElement('div');
-            textEl.contentEditable = true;
-            textEl.className = 'absolute p-2 cursor-move font-bold text-gray-800 text-lg outline-none';
-            textEl.style.top = '40%';
-            textEl.style.left = '30%';
-            textEl.innerText = 'Tocca per scrivere';
-            makeDraggable(textEl);
-            workspace.appendChild(textEl);
+        function addElement(type) {
+            const canvas = document.getElementById('canvas-area');
+            const placeholder = document.getElementById('canvas-placeholder');
+            if(placeholder) placeholder.remove();
+
+            const el = document.createElement('div');
+            el.className = "absolute p-3 cursor-move bg-purple-100 border border-purple-300 rounded-lg shadow-sm text-sm font-medium text-purple-800";
+            el.style.top = Math.random() * 150 + 'px';
+            el.style.left = Math.random() * 150 + 'px';
+
+            if(type === 'text') {
+                el.innerText = "Doppio click per modificare";
+            } else {
+                el.style.width = "60px";
+                el.style.height = "60px";
+                el.style.backgroundColor = "#9333ea";
+            }
+            canvas.appendChild(el);
         }
 
-        function addShapeElement() {
-            const workspace = document.getElementById('workspace');
-            const shape = document.createElement('div');
-            shape.className = 'absolute w-24 h-24 bg-purple-500 rounded-lg cursor-move shadow';
-            shape.style.top = '30%';
-            shape.style.left = '30%';
-            makeDraggable(shape);
-            workspace.appendChild(shape);
+        function changeCanvasColor() {
+            const canvas = document.getElementById('canvas-area');
+            const colors = ['#ffffff', '#f3f4f6', '#ede9fe', '#fee2e2', '#dcfce7'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            canvas.style.backgroundColor = randomColor;
         }
 
-        function changeBackground() {
-            const workspace = document.getElementById('workspace');
-            const colors = ['#ffffff', '#f3f4f6', '#7d2ae7', '#00c4cc', '#ff758c', '#ffe600'];
-            const currentColor = workspace.style.backgroundColor;
-            let nextIndex = (colors.indexOf(currentColor) + 1) % colors.length;
-            workspace.style.backgroundColor = colors[nextIndex];
+        function saveProject() {
+            const title = document.getElementById('editor-title-label').innerText;
+            currentProjects.push({ title: title, date: new Date().toLocaleDateString() });
+            localStorage.setItem('astradesign_projects', JSON.stringify(currentProjects));
+            alert('Progetto salvato con successo!');
+            switchTab('progetti');
         }
 
-        function clearWorkspace() {
-            document.getElementById('workspace').innerHTML = '';
-            document.getElementById('workspace').style.backgroundColor = '#ffffff';
-        }
-
-        // Semplice sistema di trascinamento elementi sul canvas
-        function makeDraggable(element) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            element.onmousedown = dragMouseDown;
-            element.ontouchstart = dragTouchStart;
-
-            function dragMouseDown(e) {
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            if(currentProjects.length === 0) {
+                container.innerHTML = '<div class="bg-white rounded-2xl p-6 text-center border border-dashed border-gray-200 text-gray-400"><p class="text-sm">Nessun progetto salvato finora.</p></div>';
+                return;
             }
-
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                element.style.top = (element.offsetTop - pos2) + "px";
-                element.style.left = (element.offsetLeft - pos1) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-
-            function dragTouchStart(e) {
-                let touch = e.touches[0];
-                pos3 = touch.clientX;
-                pos4 = touch.clientY;
-                document.ontouchend = closeTouchElement;
-                document.ontouchmove = elementTouchDrag;
-            }
-
-            function elementTouchDrag(e) {
-                let touch = e.touches[0];
-                pos1 = pos3 - touch.clientX;
-                pos2 = pos4 - touch.clientY;
-                pos3 = touch.clientX;
-                pos4 = touch.clientY;
-                element.style.top = (element.offsetTop - pos2) + "px";
-                element.style.left = (element.offsetLeft - pos1) + "px";
-            }
-
-            function closeTouchElement() {
-                document.ontouchend = null;
-                document.ontouchmove = null;
-            }
-        }
-
-        // Salvataggio con localStorage
-        function saveProjectToStorage(name) {
-            let projects = JSON.parse(localStorage.getItem('astradesign_projects') || '[]');
-            if(!projects.includes(name)) {
-                projects.push(name);
-                localStorage.setItem('astradesign_projects', JSON.stringify(projects));
-            }
-            loadProjects();
-        }
-
-        function loadProjects() {
-            let projects = JSON.parse(localStorage.getItem('astradesign_projects') || '["Progetto senza titolo 1", "Grafica Social 2"]');
-            
-            const recentContainer = document.getElementById('recent-projects-list');
-            const allContainer = document.getElementById('all-projects-list');
-            
-            if(recentContainer) {
-                recentContainer.innerHTML = projects.slice(0, 2).map(p => `
-                    <div onclick="openEditor('${p}', 1080, 1080)" class="bg-white rounded-xl p-3 shadow-sm cursor-pointer border border-gray-100 hover:shadow transition">
-                        <div class="h-28 bg-gray-100 rounded-lg mb-2 flex items-center justify-center text-gray-400 font-bold text-xs"><i class="fa-solid fa-image text-xl"></i></div>
-                        <p class="text-xs font-bold truncate">${p}</p>
-                        <span class="text-[10px] text-gray-400">Privato • 1080x1080</span>
+            container.innerHTML = '';
+            currentProjects.forEach((proj, idx) => {
+                container.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${proj.title}</h4>
+                            <p class="text-xs text-gray-400">Creato il ${proj.date}</p>
+                        </div>
+                        <button onclick="deleteProject(${idx})" class="text-red-500 hover:text-red-700 text-sm p-2"><i class="fa-solid fa-trash"></i></button>
                     </div>
-                `).join('');
-            }
+                `;
+            });
+        }
 
-            if(allContainer) {
-                allContainer.innerHTML = projects.map(p => `
-                    <div onclick="openEditor('${p}', 1080, 1080)" class="bg-white p-3 rounded-xl shadow-sm flex items-center justify-between cursor-pointer hover:bg-gray-50">
-                        <div class="flex items-center space-x-3">
+        function deleteProject(index) {
+            currentProjects.splice(index, 1);
+            localStorage.setItem('astradesign_projects', JSON.stringify(currentProjects));
+            renderProjects();
+        }
+
+        function generateAI() {
+            const prompt = document.getElementById('ai-prompt').value;
+            if(!prompt.trim()) {
+                alert('Scrivi qualcosa per l\'IA!');
+                return;
+            }
+            alert('Astra AI ha generato il design basato su: "' + prompt + '"!');
+            openEditor('AI: ' + prompt.substring(0, 15) + '...');
+        }
+    </script>
+</body>
+                </html>
     
