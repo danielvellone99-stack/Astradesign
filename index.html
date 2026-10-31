@@ -2,400 +2,386 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotifree - YouTube Edition</title>
+    <!-- CONFIGURAZIONE PWA E SCHERMO INTERO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>KX Mods Launcher</title>
+    
+    <!-- MANIFEST DINAMICO PER PWA -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"KX Mods Launcher","short_name":"KX Mods","start_url":".","display":"standalone","background_color":"#050505","theme_color":"#050505","icons":[{"src":"https://i.imgur.com/8QzJqYl.png","sizes":"512x512","type":"image/png"}]}'>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        :root {
+            --primary: #00ff41;
+            --primary-dim: rgba(0, 255, 65, 0.1);
+            --bg: #050505;
+            --card-bg: #111111;
+            --text: #ffffff;
+            --text-muted: #888888;
+            --border: #222222;
+            --danger: #ff3333;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: #000;
-            color: #fff;
-            height: 100vh;
-            display: grid;
-            grid-template-rows: 1fr 90px;
-            grid-template-columns: 240px 1fr;
-            grid-template-areas: 
-                "sidebar main"
-                "player player";
-            overflow: hidden;
+            margin: 0; padding: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg); color: var(--text);
+            min-height: 100vh; display: flex; flex-direction: column;
+            overflow-x: hidden; user-select: none; -webkit-user-select: none;
         }
 
-        /* Sidebar */
-        .sidebar {
-            grid-area: sidebar;
-            background-color: #000;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        header {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100; 
+            background: rgba(5,5,5,0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-icon { 
+            width: 45px; height: 45px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid var(--primary); 
+            box-shadow: 0 0 10px var(--primary-dim); 
+            background: #000;
+        }
+        .app-name { font-weight: 700; font-size: 18px; letter-spacing: 1px; text-transform: uppercase; color: var(--primary); text-shadow: 0 0 5px var(--primary-dim); }
+        .app-version { font-size: 10px; color: var(--text-muted); margin-top: 2px; font-family: sans-serif; }
+
+        #active-timer-container {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 255, 65, 0.05); padding: 6px 16px; border-radius: 4px;
+            font-size: 13px; font-weight: bold; color: var(--primary); border: 1px solid var(--primary-dim);
+            display: none; backdrop-filter: blur(5px); letter-spacing: 1px;
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
+        main { flex: 1; padding: 20px 20px 120px 20px; }
 
-        .logo span {
-            color: #1db954;
+        .banner {
+            width: 100%; height: 140px; border-radius: 8px; margin-bottom: 24px;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+            display: flex; align-items: center; padding: 24px; position: relative; overflow: hidden;
+            border: 1px solid var(--border);
         }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .banner::before {
+            content: ''; position: absolute; top: 0; right: 0; width: 100px; height: 100%;
+            background: linear-gradient(to left, var(--primary-dim), transparent);
         }
+        .banner-text h2 { margin: 0 0 8px 0; font-size: 20px; color: var(--primary); }
+        .banner-text p { margin: 0; color: var(--text-muted); font-size: 12px; font-family: sans-serif; }
 
-        .nav-links li a {
-            color: #b3b3b3;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: color 0.2s;
+        .game-card {
+            background: var(--card-bg); border-radius: 8px; padding: 20px; margin-bottom: 16px;
+            border: 1px solid var(--border); transition: all 0.2s;
         }
-
-        .nav-links li a:hover, .nav-links li a.active {
-            color: #fff;
-        }
-
-        /* Main Content */
-        .main-content {
-            grid-area: main;
-            background: linear-gradient(180deg, #222 0%, #121212 100%);
-            margin: 8px 8px 0 0;
-            border-radius: 8px;
-            padding: 24px;
-            overflow-y: auto;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .search-bar {
-            background-color: #242424;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 500px;
-            color: #fff;
-            width: 300px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .search-bar::placeholder {
-            color: #b3b3b3;
-        }
-
-        .welcome-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .playlist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-        }
-
-        .playlist-card {
-            background-color: #181818;
-            padding: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .playlist-card:hover {
-            background-color: #282828;
-        }
-
-        .playlist-card img {
-            width: 100%;
-            aspect-ratio: 1;
+        .game-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .game-icon { 
+            width: 60px; height: 60px; 
+            border-radius: 12px; 
             object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid #333; 
+            background: #222;
+        }
+        .game-info { flex: 1; }
+        .game-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; font-family: sans-serif; }
+        .game-status { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; font-family: sans-serif; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 5px var(--primary); }
+        .status-dot.offline { background: var(--text-muted); box-shadow: none; }
+
+        .btn {
+            width: 100%; padding: 14px; border: 1px solid var(--primary); border-radius: 6px;
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            background: var(--primary-dim); color: var(--primary); text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn:active { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary-dim); }
+        .btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #333; color: #555; background: transparent; box-shadow: none; }
+        .btn-outline { background: transparent; border: 1px solid #333; color: var(--text-muted); }
+
+        .form-input {
+            width: 100%; padding: 14px; background: #000; border: 1px solid #333;
+            border-radius: 6px; color: var(--primary); font-size: 16px; outline: none;
+            margin-bottom: 12px; text-align: center; letter-spacing: 2px; font-family: monospace;
+        }
+        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary-dim); }
+
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(17,17,17,0.95); backdrop-filter: blur(15px);
+            padding: 12px 24px; border-radius: 30px; display: flex; gap: 32px;
+            border: 1px solid var(--border); z-index: 90;
+        }
+        .nav-item { color: var(--text-muted); font-size: 20px; cursor: pointer; transition: 0.2s; }
+        .nav-item.active { color: var(--primary); text-shadow: 0 0 10px var(--primary-dim); }
+
+        #admin-overlay {
+            position: fixed; inset: 0; background: var(--bg); z-index: 200;
+            display: none; flex-direction: column; padding: 20px; overflow-y: auto;
+            border-left: 2px solid var(--primary);
+        }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+        .admin-section { background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .form-label { display: block; font-size: 12px; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .form-select {
+            width: 100%; padding: 12px; background: #000; border: 1px solid #333;
+            border-radius: 6px; color: white; font-size: 14px; outline: none; margin-bottom: 16px;
+        }
+        .key-list { max-height: 300px; overflow-y: auto; }
+        .key-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; border-bottom: 1px solid #222; font-size: 12px; font-family: monospace;
+        }
+        .key-actions { display: flex; gap: 8px; }
+        .btn-sm { padding: 6px 12px; font-size: 10px; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; }
+        .btn-danger { background: rgba(255, 51, 51, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-copy { background: rgba(255,255,255,0.05); color: white; border: 1px solid #444; }
+
+        #password-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 300;
+            display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: var(--card-bg); padding: 30px; border-radius: 8px;
+            width: 90%; max-width: 320px; text-align: center; border: 1px solid var(--primary);
+            box-shadow: 0 0 30px var(--primary-dim);
         }
 
-        .playlist-card h4 {
-            font-size: 16px;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: #000; padding: 12px 24px; border-radius: 4px;
+            font-size: 14px; font-weight: bold; z-index: 400; opacity: 0; transition: opacity 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-
-        .playlist-card p {
-            color: #b3b3b3;
-            font-size: 14px;
-        }
-
-        /* Bottom Player Bar */
-        .player-bar {
-            grid-area: player;
-            background-color: #181818;
-            border-top: 1px solid #282828;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-        }
-
-        .current-song {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            width: 30%;
-        }
-
-        .current-song img {
-            width: 56px;
-            height: 56px;
-            border-radius: 4px;
-            object-fit: cover;
-        }
-
-        .song-info h4 {
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .song-info p {
-            font-size: 12px;
-            color: #b3b3b3;
-        }
-
-        .player-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            width: 40%;
-        }
-
-        .control-buttons {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .control-buttons button {
-            background: none;
-            border: none;
-            color: #b3b3b3;
-            cursor: pointer;
-            font-size: 18px;
-            transition: color 0.2s;
-        }
-
-        .control-buttons button:hover {
-            color: #fff;
-        }
-
-        .control-buttons button.play-btn {
-            background-color: #fff;
-            color: #000;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .progress-bar-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            font-size: 11px;
-            color: #b3b3b3;
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background-color: #4d4d4d;
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .progress-bar-filled {
-            width: 0%;
-            height: 100%;
-            background-color: #1db954;
-            border-radius: 2px;
-        }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <!-- Lettore YouTube nascosto -->
-    <div id="youtube-player" style="display:none;"></div>
-
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="logo">🟢 Spotifree</div>
-        <ul class="nav-links">
-            <li><a href="#" class="active">🏠 Home</a></li>
-            <li><a href="#">🔍 Cerca</a></li>
-            <li><a href="#">📚 La tua libreria</a></li>
-        </ul>
-    </nav>
-
-    <!-- Schermata Principale -->
-    <main class="main-content">
-        <div class="header">
-            <h1 class="welcome-title">I tuoi brani da YouTube</h1>
-            <input type="text" class="search-bar" placeholder="Cerca una canzone o incolla ID YouTube..." id="search-input" onkeypress="handleSearch(event)">
+    <header>
+        <div class="logo-area" id="logo-trigger">
+            <!-- LOGO KX MODS: SVG Neon Dragon Style -->
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0OCIgc3Ryb2tlPSIjMDBmZjQxIiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwNTA1MDUiLz48cGF0aCBkPSJNMzUgNjVDMzUgNjUgNDUgMzUgNjUgMzVDNjUgMzUgNTUgNjUgMzUgNjVaIiBzdHJva2U9IiMwMGZmNDEiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjgiIGZpbGw9IiMwMGZmNDEiLz48L3N2Zz4=" alt="KX Mods" class="logo-icon">
+            <div>
+                <div class="app-name">KX MODS</div>
+                <div class="app-version">v2.0.0 [STABLE]</div>
+            </div>
         </div>
-        
-        <div class="playlist-grid" id="playlist-container">
-            <!-- Le card si caricheranno qui o possono essere aggiunte a mano -->
-            <div class="playlist-card" onclick="playTrack('jfKfPfyJRdk', 'Lofi Hip Hop Radio', 'Lofi Girl', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300')">
-                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" alt="Cover">
-                <h4>Lofi Hip Hop Radio</h4>
-                <p>Lofi Girl (YouTube Stream)</p>
+        <div id="active-timer-container">⏱ <span id="timer-display">00:00:00</span></div>
+        <div style="width: 45px;"></div>
+    </header>
+
+    <main>
+        <div class="banner">
+            <div class="banner-text">
+                <h2>> SYSTEM_READY</h2>
+                <p>Accesso privilegiato ai moduli di gioco</p>
             </div>
-            <div class="playlist-card" onclick="playTrack('5qap5aO4i9A', 'Lofi Beats to Relax', 'Study Music', 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300')">
-                <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" alt="Cover">
-                <h4>Lofi Beats to Relax</h4>
-                <p>Study Music</p>
+        </div>
+
+        <div class="game-card" id="auth-card">
+            <div class="game-header">
+                <div class="game-info">
+                    <div class="game-title">VERIFICA LICENZA</div>
+                    <div class="game-status">Inserisci chiave di accesso valida</div>
+                </div>
             </div>
+            <input type="text" id="user-key-input" class="form-input" placeholder="XXXX-XXXX-XXXX" maxlength="14">
+            <button class="btn" onclick="validateUserKey()">[ ATTIVA ACCESSO ]</button>
+        </div>
+
+        <div class="game-card">
+            <div class="game-header">
+                <!-- TUO LINK IMMAGINE 8 BALL POOL -->
+                <img src="https://share.google/LuHjERQTaQGpoAYjj" alt="8BP" class="game-icon" onerror="this.src='https://play-lh.googleusercontent.com/VSwHQjcAttxsLE47RuS4PqpC4LT7lCoSjE7Hx5AW_yCxtDvcnsHHvm5CTuL5BPN-uRTP=w240-h480-rw'">
+                <div class="game-info">
+                    <div class="game-title">8 BALL POOL</div>
+                    <div class="game-status"><span class="status-dot"></span> INSTALLED • v56.34.0</div>
+                </div>
+            </div>
+            <button class="btn" id="start-btn" onclick="launchGame()" disabled>[ AVVIA MODULO ]</button>
+        </div>
+
+        <div class="game-card">
+            <div class="game-header">
+                <!-- TUO LINK IMMAGINE CARROM POOL -->
+                <img src="https://share.google/dIFh4w5I2y4IEBMfG" alt="Carrom" class="game-icon" onerror="this.src='https://via.placeholder.com/60/795548/ffffff?text=CP'">
+                <div class="game-info">
+                    <div class="game-title">CARROM POOL</div>
+                    <div class="game-status"><span class="status-dot offline"></span> NOT INSTALLED</div>
+                </div>
+            </div>
+            <button class="btn btn-outline" disabled>[ CHECK STATUS ]</button>
         </div>
     </main>
 
-    <!-- Barra di Riproduzione in basso -->
-    <footer class="player-bar">
-        <div class="current-song">
-            <img id="current-cover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100" alt="Song">
-            <div class="song-info">
-                <h4 id="current-title">Seleziona un brano</h4>
-                <p id="current-artist">-</p>
-            </div>
+    <nav class="bottom-nav">
+        <div class="nav-item active">⌂</div>
+        <div class="nav-item">▤</div>
+        <div class="nav-item">👥</div>
+        <div class="nav-item">⚙</div>
+    </nav>
+
+    <div id="admin-overlay">
+        <div class="admin-header">
+            <h2 style="margin:0; color:var(--primary); font-size:18px;">> ADMIN_CONSOLE</h2>
+            <button class="btn-sm btn-outline" onclick="closeAdmin()" style="color:white; border-color:#555;">[ ESCI ]</button>
         </div>
-        
-        <div class="player-controls">
-            <div class="control-buttons">
-                <button onclick="togglePlay()" class="play-btn" id="play-icon">▶</button>
+        <div class="admin-section">
+            <h3 style="margin-top:0; color:white; font-size:14px; text-transform:uppercase;">Generatore Chiavi</h3>
+            <div class="form-group">
+                <label class="form-label">Durata Sessione</label>
+                <select id="key-duration" class="form-select">
+                    <option value="1">1 ORA</option>
+                    <option value="3">3 ORE</option>
+                    <option value="6">6 ORE</option>
+                    <option value="24">1 GIORNO</option>
+                    <option value="48">2 GIORNI</option>
+                    <option value="168">7 GIORNI</option>
+                    <option value="720">30 GIORNI</option>
+                </select>
             </div>
-            <div class="progress-bar-container">
-                <span id="current-time">0:00</span>
-                <div class="progress-bar" id="progress-container">
-                    <div class="progress-bar-filled" id="progress-filled"></div>
-                </div>
-                <span id="total-duration">0:00</span>
+            <div class="form-group">
+                <label class="form-label">Bind Dispositivo</label>
+                <select id="key-device-type" class="form-select">
+                    <option value="single">SINGOLO DEVICE</option>
+                    <option value="multi">MULTI-DEVICE</option>
+                </select>
             </div>
+            <button class="btn" onclick="generateKey()">[ GENERA KEY ]</button>
         </div>
-        
-        <div style="width: 30%;"></div>
-    </footer>
+        <div class="admin-section">
+            <h3 style="margin-top:0; color:white; font-size:14px; text-transform:uppercase;">Database Chiavi</h3>
+            <div class="key-list" id="keys-container"></div>
+        </div>
+    </div>
 
-    <!-- Script YouTube IFrame API -->
-    <script>
-        let player;
-        let isPlaying = false;
-        let progressInterval;
+    <div id="password-modal">
+        <div class="modal-content">
+            <h3 style="color:var(--primary); margin-top:0;">AUTH REQUIRED</h3>
+            <input type="password" id="admin-pass" class="form-input" placeholder="PASSWORD" style="margin: 16px 0;">
+            <button class="btn" onclick="checkPassword()">[ ACCEDI ]</button>
+            <button class="btn btn-outline" style="margin-top:8px; border-color:#333; color:#555;" onclick="document.getElementById('password-modal').style.display='none'">ANNULLA</button>
+        </div>
+    </div>
 
-        // Carica l'API di YouTube in modo asincrono
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    <div id="toast" class="toast">Messaggio</div>
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
-                videoId: '',
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+<script>
+    const ADMIN_PASS = "daniel2014";
+    let clickCount = 0;
+    let clickTimer = null;
+    
+    const getKeys = () => JSON.parse(localStorage.getItem('kx_keys') || '[]');
+    const saveKeys = (keys) => localStorage.setItem('kx_keys', JSON.stringify(keys));
+    let currentUserSession = JSON.parse(localStorage.getItem('kx_session') || 'null');
+
+    function updateTimer() {
+        const container = document.getElementById('active-timer-container');
+        const display = document.getElementById('timer-display');
+        const startBtn = document.getElementById('start-btn');
+        if (!currentUserSession) {
+            container.style.display = 'none';
+            startBtn.disabled = true;
+            startBtn.textContent = "[ AVVIA MODULO ]";
+            return;
         }
-
-        function playTrack(videoId, title, artist, cover) {
-            if (!player) return;
-            player.loadVideoById(videoId);
-            document.getElementById('current-title').textContent = title;
-            document.getElementById('current-artist').textContent = artist;
-            document.getElementById('current-cover').src = cover;
-            document.getElementById('play-icon').textContent = "⏸";
-            isPlaying = true;
-            startProgressTracker();
+        const now = Math.floor(Date.now() / 1000);
+        const remaining = currentUserSession.expiresAt - now;
+        if (remaining <= 0) {
+            localStorage.removeItem('kx_session');
+            currentUserSession = null;
+            showToast("SESSION_EXPIRED");
+            updateTimer();
+            return;
         }
+        container.style.display = 'block';
+        startBtn.disabled = false;
+        const h = Math.floor(remaining / 3600);
+        const m = Math.floor((remaining % 3600) / 60);
+        const s = remaining % 60;
+        display.textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
 
-        function togglePlay() {
-            if (!player) return;
-            const state = player.getPlayerState();
-            if (state === YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-                document.getElementById('play-icon').textContent = "▶";
-                isPlaying = false;
-            } else {
-                player.playVideo();
-                document.getElementById('play-icon').textContent = "⏸";
-                isPlaying = true;
-            }
-        }
+    function validateUserKey() {
+        const input = document.getElementById('user-key-input').value.trim().toUpperCase();
+        const keys = getKeys();
+        const keyData = keys.find(k => k.value === input);
+        const now = Math.floor(Date.now() / 1000);
+        if (!keyData) return showToast("INVALID_KEY");
+        if (keyData.revoked) return showToast("KEY_REVOKED_BY_ADMIN");
+        if (keyData.expiresAt && now > keyData.expiresAt) return showToast("KEY_EXPIRED");
+        currentUserSession = { key: keyData.value, expiresAt: keyData.expiresAt, deviceType: keyData.deviceType };
+        localStorage.setItem('kx_session', JSON.stringify(currentUserSession));
+        showToast("ACCESS_GRANTED");
+        updateTimer();
+    }
 
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                document.getElementById('play-icon').textContent = "⏸";
-                isPlaying = true;
-            } else if (event.data === YT.PlayerState.PAUSED) {
-                document.getElementById('play-icon').textContent = "▶";
-                isPlaying = false;
-            }
-        }
+    function launchGame() {
+        if (!currentUserSession) return showToast("NO_ACTIVE_SESSION");
+        const pkg = "com.miniclip.eightballpool";
+        const fallback = `https://play.google.com/store/apps/details?id=${pkg}`;
+        const btn = document.getElementById('start-btn');
+        btn.textContent = "[ LOADING... ]";
+        setTimeout(() => {
+            window.location.href = `intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${pkg};S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
+            btn.textContent = "[ AVVIA MODULO ]";
+        }, 800);
+    }
 
-        function startProgressTracker() {
-            clearInterval(progressInterval);
-            progressInterval = setInterval(() => {
-                if (isPlaying && player && player.getDuration) {
-                    const current = player.getCurrentTime();
-                    const duration = player.getDuration();
-                    const percent = (current / duration) * 100;
-                    document.getElementById('progress-filled').style.width = `${percent}%`;
-                    document.getElementById('current-time').textContent = formatTime(current);
-                    document.getElementById('total-duration').textContent = formatTime(duration);
-                }
-            }, 500);
+    document.getElementById('logo-trigger').addEventListener('click', () => {
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => clickCount = 0, 2000);
+        if (clickCount >= 5) {
+            document.getElementById('password-modal').style.display = 'flex';
+            clickCount = 0;
         }
+    });
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    function checkPassword() {
+        if (document.getElementById('admin-pass').value === ADMIN_PASS) {
+            document.getElementById('password-modal').style.display = 'none';
+            document.getElementById('admin-overlay').style.display = 'flex';
+            renderKeys();
+            document.getElementById('admin-pass').value = '';
+        } else {
+            showToast("AUTH_FAILED");
         }
+    }
 
-        function handleSearch(e) {
-            if (e.key === 'Enter') {
-                const query = e.target.value;
-                alert("Hai cercato: " + query + "\nPuoi aggiungere facilmente qualsiasi ID video di YouTube alle tue card personalizzate!");
-            }
+    function closeAdmin() { document.getElementById('admin-overlay').style.display = 'none'; }
+
+    function generateKey() {
+        const hours = parseInt(document.getElementById('key-duration').value);
+        const devType = document.getElementById('key-device-type').value;
+        const now = Math.floor(Date.now() / 1000);
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let key = '';
+        for(let i=0; i<12; i++) {
+            if(i>0 && i%4===0) key += '-';
+            key += chars[Math.floor(Math.random() * chars.length)];
         }
-    </script>
-</body>
-</html>
+        const newKey = { value: key, createdAt: now, expiresAt: hours ? now + (hours * 3600) : null, deviceType: devType, revoked: false };
+        const keys = getKeys();
+        keys.unshift(newKey);
+        saveKeys(keys);
+        renderKeys();
+        showToast("KEY_GENERATED");
+    }
+
+    function renderKeys() {
+        const container = document.getElementById('keys-container');
+        const keys = getKeys();
+        container.innerHTML = keys.map((k, index) => {
+            const expDate = k.expiresAt ? new Date(k.expiresAt * 1000).toLocaleString() : 'LIFETIME';
+            const statusColor = k.revoked ? '#ff3333' : '#00ff41';
+            return `<div class="key-item"><div><div style="font-weight:600; color:${statusColor}">${k.value}</div><div style="color:#555; font-size:10px; margin-top:4px">EXP: ${expDate} | ${k.deviceType === 'single' ? '1_DEV' : 'MULTI'}</div></div><div class="key-actions"><button class="btn-sm btn-copy" onclick="copyKey('${k.value}')">CPY</button><button class="btn-sm btn-danger" onclick="toggleRevoke(${index})">${k.revoked ? 'UNBAN' : 'BAN'}</button><button class="btn-sm btn-danger" style="background:transparent; border-color:#333; color:#555;" onclick="deleteKey(${index})">DEL</button></div></div>`;
+        }).join('');
+ 
