@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NOIR RUNNER — v6.7</title>
+<title>NOIR RUNNER — v7.3 (Subway Sweats Style)</title>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;overflow:hidden;height:100%;color:#fff;
@@ -77,8 +77,10 @@
   .panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
     padding:16px 26px;border-radius:12px;margin:14px 0;text-align:left;font-size:14px;line-height:1.8}
   .gold{color:#FFD700}
-  .records-box{background:rgba(255,215,0,.15);border:1px solid #FFD700;padding:10px 22px;
-    border-radius:10px;margin:8px 0 4px;font-size:14px;color:#FFD700;letter-spacing:1px}
+  .records-box{background:rgba(255,215,0,.15);border:1px solid #FFD700;padding:8px 20px;
+    border-radius:10px;margin:5px 0;font-size:14px;color:#FFD700;letter-spacing:1px;display:inline-block;min-width:260px}
+  .records-box.normal{border-color:#2ecc71;color:#7fffa8;background:rgba(46,204,113,.15)}
+  .records-box.nocoin{border-color:#ff4444;color:#ffaaaa;background:rgba(255,68,68,.15)}
   .new-record{color:#FFD700;font-size:22px;font-weight:900;letter-spacing:3px;margin:8px 0;
     text-shadow:0 0 20px #FFD700;animation:pulse .6s infinite alternate}
   @keyframes pulse{from{opacity:.6;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
@@ -90,7 +92,6 @@
   .btn-green{background:linear-gradient(180deg,#2ecc71,#1e8a1e);color:#fff;border:2px solid #fff}
   .btn-red{background:linear-gradient(180deg,#e74c3c,#a93226);color:#fff;border:2px solid #fff}
   .btn-gold{background:linear-gradient(180deg,#FFD700,#b8860b);color:#000;border:2px solid #fff}
-  .btn-blue{background:linear-gradient(180deg,#4a90e2,#1a237e);color:#fff;border:2px solid #fff}
   .btn-secondary{background:#333;color:#ddd;border:2px solid #fff;font-size:14px;padding:10px 22px}
   .btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
   #startScreen{justify-content:space-between;padding-top:80px;padding-bottom:40px}
@@ -228,12 +229,6 @@
   #powerupHud.shield{border-color:#22cc44;color:#66ff88}
   #powerupHud.x2{border-color:#FFD700;color:#FFD700}
   #powerupHud.jetpack{border-color:#66ccff;color:#66ccff;box-shadow:0 0 20px rgba(102,204,255,.7)}
-  #lowFpsPopup{position:absolute;inset:0;z-index:200;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;background:rgba(0,0,0,.9);pointer-events:auto;
-    text-align:center;padding:20px}
-  #lowFpsPopup.hidden{display:none!important}
-  #lowFpsPopup h2{font-size:22px;color:#ff6b6b;letter-spacing:3px;margin:0 0 10px}
-  #lowFpsPopup p{font-size:15px;color:#ddd;margin:8px 0 20px}
   @media (max-width:720px){
     .overlay h1{font-size:30px;letter-spacing:3px}
     .overlay h2{font-size:18px}
@@ -258,6 +253,7 @@
     #fpsMeter{top:56px;left:10px;font-size:10px}
     .santa-hat{font-size:22px;top:-16px;left:-10px}
     .color-btn{width:36px;height:36px}
+    .records-box{font-size:12px;padding:6px 14px;min-width:220px}
   }
 </style>
 </head>
@@ -284,7 +280,7 @@
 <div id="noCoinTimer" class="hidden">TEMPO SENZA MONETE: 00:00</div>
 <div id="powerupHud" class="hidden"><span id="powerupText">POWER-UP</span></div>
 <div id="toast"></div>
-<div id="fpsMeter">60 FPS</div>
+<div id="fpsMeter">45 FPS</div>
 
 <div id="keysHUD">
   <div class="keys-row"><div id="keyW" class="key">W</div></div>
@@ -294,13 +290,6 @@
 <button id="muteButton" class="icon-btn" aria-label="Mute">🔊</button>
 <button id="settingsButton" class="icon-btn" aria-label="Settings">⚙️</button>
 
-<div id="lowFpsPopup" class="hidden">
-  <h2>IL TUO PC STA LAGGANO</h2>
-  <p>FPS sotto 35 rilevati.<br>Vuoi attivare la <strong>Modalità Potato PC</strong>?</p>
-  <div class="btn-row"><button id="lowFpsYes" class="btn btn-green">SÌ</button><button id="lowFpsNo" class="btn btn-secondary">NO</button></div>
-</div>
-
-<!-- START SCREEN (mode selection) -->
 <div id="startScreen" class="overlay" style="z-index:100;">
   <div class="start-top">
     <div class="currency">
@@ -311,26 +300,26 @@
   </div>
   <div style="margin-top:30px;">
     <h1><span class="title-wrap">N<span class="santa-hat">🎅</span></span>OIR RUNNER</h1>
-    <p style="color:#FFD700;letter-spacing:3px;font-weight:900;font-size:13px;">V6.7 — DUAL MODE</p>
-    <div id="startRecords" class="records-box">Record: 0 m — 0 monete</div>
-    <div id="noCoinRecordBox" class="records-box">No Coin Record: 00:00</div>
+    <p style="color:#FFD700;letter-spacing:3px;font-weight:900;font-size:13px;">V7.3 — SUBWAY SWEATS STYLE</p>
+    <div style="text-align:center;margin-top:10px;">
+      <div id="startRecordsNormal" class="records-box normal">🏙️ Record Normale: 0 m</div>
+      <div id="startRecordsNoCoin" class="records-box nocoin">🎯 No Coin Record: 00:00</div>
+    </div>
     <div class="panel">
-      <p>← → / A D / SWIPE — CAMBIA CORSIA</p>
-      <p>↑ / W / SPAZIO — SALTA (salto basso)</p>
-      <p>↓ / S — SCIVOLA (raccogli monete) o SLAM in aria</p>
-      <p class="gold">NO COIN: cambia corsia, saltare NON basta</p>
+      <p>← → / A D / SWIPE — CAMBIA CORSIA (lean 25°)</p>
+      <p>↑ / W / SPAZIO — SALTA (ginocchia al petto)</p>
+      <p>↓ / S — CAPRIOLA 360° in scivolata</p>
+      <p class="gold">NO COIN: salta NON basta, cambia corsia!</p>
     </div>
     <div class="mode-toggle">
       <button class="mode-btn active" data-mode="normal">NORMALE</button>
       <button class="mode-btn" data-mode="nocoins">NO COIN</button>
     </div>
   </div>
-
   <div class="mode-big-buttons">
     <button class="mode-big-btn christmas" data-playmode="christmas">🎄 MODALITÀ NATALIZIA</button>
     <button class="mode-big-btn normal" data-playmode="normal">🏙️ MODALITÀ NORMALE</button>
   </div>
-
   <div class="start-bottom">
     <button class="menu-btn" data-act="wardrobe">ARMADIETTO</button>
     <button class="menu-btn" data-act="shop">NEGOZIO</button>
@@ -349,7 +338,7 @@
   <div class="wardrobe-container">
     <div class="wardrobe-canvas"><canvas id="wardrobeCanvas"></canvas></div>
     <div class="wardrobe-info">
-      <h3 id="wName">Noir Boy</h3>
+      <h3 id="wName">SkyRider</h3>
       <span id="wRarity" class="rarity comune">COMUNE</span>
       <p id="wStats" style="font-size:12px;color:#aaa;margin-top:10px;">Personaggio selezionato</p>
       <div class="wardrobe-nav"><button id="wPrev" class="nav-btn">◀</button><button id="wNext" class="nav-btn">▶</button></div>
@@ -419,7 +408,7 @@
     </div>
   </div>
   <div class="settings-section">
-    <label>🥔 MODALITÀ POTATO PC</label>
+    <label>🥔 MODALITÀ POTATO PC <span style="color:#888;font-size:11px;">(solo tu la attivi)</span></label>
     <button id="potatoToggle" class="toggle-opt">OFF</button>
   </div>
   <button id="settingsClose" class="btn btn-secondary">CHIUDI</button>
@@ -453,16 +442,18 @@ const $ = id => document.getElementById(id);
 const startScreen=$('startScreen'), mapScreen=$('mapScreen'), mapScreenTitle=$('mapScreenTitle'),
   wardrobeScreen=$('wardrobeScreen'), shopScreen=$('shopScreen'),
   missionsScreen=$('missionsScreen'), settingsPanel=$('settingsPanel'),
-  gameOverScreen=$('gameOverScreen'), lowFpsPopup=$('lowFpsPopup');
+  gameOverScreen=$('gameOverScreen');
 const menuBtns = document.querySelectorAll('.menu-btn');
 const modeBigBtns = document.querySelectorAll('.mode-big-btn');
 const mapBackButton=$('mapBackButton'), wardrobeBack=$('wardrobeBack'),
   shopCloseButton=$('shopCloseButton'), missionsBack=$('missionsBack'),
   settingsButton=$('settingsButton'), settingsClose=$('settingsClose'), muteButton=$('muteButton');
-const distanceEl=$('distance-display'), coinEl=$('coin-display'), speedEl=$('speed-display'), livesDisplay=$('lives-display') || $('livesDisplay');
-const finalScoreEl=$('final-score'), finalCoinsEl=$('final-coins'), startRecordsEl=$('startRecords'),
-  noCoinRecordBox=$('noCoinRecordBox'), gameOverRecordsEl=$('gameOverRecords'),
-  newRecordMsg=$('newRecordMsg'), gameOverTitle=$('gameOverTitle');
+const distanceEl=$('distance-display'), coinEl=$('coin-display'), speedEl=$('speed-display'),
+  livesDisplay=$('livesDisplay');
+const finalScoreEl=$('final-score'), finalCoinsEl=$('final-coins'),
+  startRecordsNormal=$('startRecordsNormal'), startRecordsNoCoin=$('startRecordsNoCoin'),
+  gameOverRecordsEl=$('gameOverRecords'), newRecordMsg=$('newRecordMsg'),
+  gameOverTitle=$('gameOverTitle');
 const startCoins=$('startCoins'), startKeys=$('startKeys'), startBest=$('startBest');
 const tutorialEl=$('tutorial-text'), powerupHud=$('powerupHud'), powerupText=$('powerupText'),
   toastEl=$('toast'), fpsMeter=$('fpsMeter'), noCoinTimerEl=$('noCoinTimer');
@@ -470,66 +461,142 @@ const shopCoins=$('shopCoins'), shopContent=$('shopContent'), missionList=$('mis
 const keyW=$('keyW'), keyA=$('keyA'), keyS=$('keyS'), keyD=$('keyD');
 const wName=$('wName'), wRarity=$('wRarity'), wEquip=$('wEquip'), wPrev=$('wPrev'), wNext=$('wNext');
 const wardrobeCanvas=$('wardrobeCanvas');
-const lowFpsYes=$('lowFpsYes'), lowFpsNo=$('lowFpsNo'), fpsLockToggle=$('fpsLockToggle');
+const fpsLockToggle=$('fpsLockToggle');
 const mapGrid=$('mapGrid'), snowContainer=$('snowContainer'), christmasLights=$('christmasLights');
 const potatoToggle=$('potatoToggle'), noCoinColorPicker=$('noCoinColorPicker'), noCoinNameInput=$('noCoinNameInput');
 const restartButton=$('restartButton'), menuButton=$('menuButton');
 
 /* ============ LOCALSTORAGE ============ */
 const LS = {
-  bestScore:'noir_runner_best_score', bestCoins:'noir_runner_best_coins',
+  bestScoreNormal:'noir_runner_best_normal',
+  bestNoCoinTime:'noir_runner_best_no_coin',
+  bestCoinsNormal:'noir_runner_best_coins_normal',
+  bestCoinsNoCoin:'noir_runner_best_coins_no_coin',
   totalGames:'noir_runner_total_games', totalCoins:'noir_runner_total_coins',
   keys:'noir_runner_keys', unlockedChars:'noir_runner_unlocked_characters',
   selectedChar:'noir_runner_selected_character', unlockedMasks:'noir_runner_unlocked_masks',
-  selectedMask:'noir_runner_selected_mask', selectedMap:'noir_runner_selected_map',
-  selectedMapChristmas:'noir_runner_selected_map_christmas', selectedMapNormal:'noir_runner_selected_map_normal',
-  settings:'noir_runner_settings', bestNoCoinTime:'noir_runner_best_no_coin_time',
+  selectedMask:'noir_runner_selected_mask', settings:'noir_runner_settings',
   muted:'noir_runner_muted', missionsDate:'noir_runner_missions_date',
   missionsProgress:'noir_runner_missions_progress', noCoinColor:'noir_runner_no_coin_color',
   noCoinName:'noir_runner_no_coin_name', potatoMode:'noir_runner_potato_mode',
-  lastMode:'noir_runner_last_mode', lastMap:'noir_runner_last_map'
+  lastMode:'noir_runner_last_mode', lastMap:'noir_runner_last_map',
+  legacyBestScore:'noir_runner_best_score'
 };
 function lsGet(k,fb){try{const v=localStorage.getItem(k);return v===null?fb:v}catch(e){return fb}}
 function lsSet(k,v){try{localStorage.setItem(k,String(v))}catch(e){}}
 function lsGetNum(k,fb=0){const v=parseInt(lsGet(k,String(fb)),10);return isNaN(v)?fb:v}
 
-/* ============ 40 CHARACTERS ============ */
-const PRO_NAMES = ['ProAlpha','ProBeta','ProGamma','ProDelta','ProEpsilon','ProZeta','ProEta','ProTheta','ProIota','ProKappa',
-  'ProLambda','ProMu','ProNu','ProXi','ProOmicron','ProPi','ProRho','ProSigma','ProTau','ProUpsilon',
-  'ProPhi','ProChi','ProPsi','ProOmega','ShadowPro','IcePro','FirePro','StormPro','KnightPro','RoyalPro'];
-const SKIN_POOL=[0xffdbac,0xf5c6a0,0xe0ac69,0xc68642,0x8d5524,0x4a2c17];
-const SHIRT_POOL=[0xff6b6b,0x4a90e2,0x2ecc71,0xf39c12,0x9b59b6,0xe74c3c,0x1abc9c,0x34495e,0xffd700,0xff1493,0x00bcd4,0x8bc34a];
-const PANTS_POOL=[0x2c3e50,0x1a1a1a,0x34495e,0x1a237e,0x4a148c,0xb71c1c,0x1b5e20,0xe65100];
-const HAIR_POOL=[0x1a1a1a,0x6b4423,0xc19a6b,0xffd700,0xff6b6b,0x4a90e2,0x9b59b6,0xe74c3c,0xffffff,0x00bcd4];
-const SHOE_POOL=[0xffffff,0x1a1a1a,0xff6b6b,0x4a90e2,0xffd700,0x2ecc71,0xff1493];
-const ACCESS_POOL=['none','cap','glasses','backpack','headphones','bandana','goggles','hat'];
-const FREE_CHARS = [];
-for (let i=0;i<30;i++) FREE_CHARS.push({
-  id:'pro'+i, name:PRO_NAMES[i],
-  rarity: i<10?'comune':(i<20?'raro':'epico'),
-  skin:SKIN_POOL[i%6], shirt:SHIRT_POOL[i%12], pants:PANTS_POOL[i%8],
-  hair:HAIR_POOL[i%10], shoes:SHOE_POOL[i%7], access:ACCESS_POOL[i%8], price:0
-});
-FREE_CHARS.unshift(
-  {id:'noirboy',name:'Noir Boy',rarity:'comune',skin:0xf5c6a0,shirt:0x1a1a1a,pants:0x181818,hair:0x111111,shoes:0xffffff,access:'mask',price:0},
-  {id:'spider',name:'Spider Noir',rarity:'raro',skin:0x1a1a1a,shirt:0x0a0a0a,pants:0x0a0a0a,hair:0x0a0a0a,shoes:0x0a0a0a,access:'web',price:0},
-  {id:'kxracer',name:'KX Racer',rarity:'raro',skin:0xf5c6a0,shirt:0x22cc22,pants:0x0a2a0a,hair:0x111111,shoes:0xffffff,access:'goggles',price:0},
-  {id:'sunny',name:'Sunny Girl',rarity:'raro',skin:0xffdbac,shirt:0xffd700,pants:0xff69b4,hair:0xffd700,shoes:0xff69b4,access:'none',price:0},
-  {id:'skater',name:'Skater Boy',rarity:'raro',skin:0xf5c6a0,shirt:0xe74c3c,pants:0x2c3e50,hair:0x1a1a1a,shoes:0x3498db,access:'cap',price:0}
-);
-const PAID_CHARS = [
-  {id:'supernoir',name:'Super Noir',rarity:'leggendario',skin:0xf5c6a0,shirt:0x0a0a0a,pants:0x0a0a0a,hair:0x111111,shoes:0x1a1a1a,access:'cape',capeColor:0x0a0a0a,price:2500},
-  {id:'capitanstella',name:'Capitan Stella',rarity:'leggendario',skin:0xf5c6a0,shirt:0x1e3a8a,pants:0x1e3a8a,hair:0x6b4423,shoes:0xffd700,access:'cape',capeColor:0xffd700,price:2000},
-  {id:'turbogirl',name:'Turbo Girl',rarity:'leggendario',skin:0xffdbac,shirt:0xff1493,pants:0xff69b4,hair:0xffd700,shoes:0xff1493,access:'cape',capeColor:0xffd700,price:2000},
-  {id:'santanoir',name:'Babbo Natale Noir',rarity:'leggendario',skin:0xffdbac,shirt:0xc41e3a,pants:0xc41e3a,hair:0xffffff,shoes:0x1a1a1a,access:'santa',price:5000},
-  {id:'elfoverde',name:'Elfo Verde',rarity:'epico',skin:0xffdbac,shirt:0x2ecc71,pants:0x1e8a1e,hair:0x6b4423,shoes:0x8b4513,access:'hat',hatColor:0x2ecc71,price:1500},
-  {id:'rennarossa',name:'Renna Rossa',rarity:'epico',skin:0x8b4513,shirt:0x8b4513,pants:0x4a2c17,hair:0x4a2c17,shoes:0x1a1a1a,access:'antlers',price:1500},
-  {id:'stellecadenti',name:'Stelle Cadenti',rarity:'epico',skin:0xf5c6a0,shirt:0x1a237e,pants:0x0a0a2a,hair:0x111111,shoes:0xffd700,access:'glasses',price:1200},
-  {id:'frost',name:'Frost',rarity:'epico',skin:0xddeeff,shirt:0x87ceeb,pants:0x4a90e2,hair:0xffffff,shoes:0xffffff,access:'none',price:1000},
-  {id:'candycane',name:'Candy Cane',rarity:'raro',skin:0xffdbac,shirt:0xff0000,pants:0xffffff,hair:0xff0000,shoes:0xff0000,access:'hat',hatColor:0xff0000,price:800},
-  {id:'snowking',name:'Snow King',rarity:'raro',skin:0xffffee,shirt:0xffffff,pants:0xddeeff,hair:0xffffff,shoes:0x87ceeb,access:'cape',capeColor:0xffffff,price:500}
+/* ============================================================
+   40 NEW CARTOON CHARACTERS — Subway Sweats Style
+   4 style groups × 10 chars = 40 + Spugna + Clown = 42
+   ============================================================ */
+const CHARS = [];
+// Group 1: CAP + HOODIE + JEANS + GREEN SHOES (10)
+const G1 = [
+  { name:'SkyRider', skin:0xf5c6a0, shirt:0xE74C3C, pants:0x2C3E50, hair:0x111111, accent:0x1E90FF, acc:'earring' },
+  { name:'NeonBlaze', skin:0xe0ac69, shirt:0x2ECC71, pants:0x1a1a1a, hair:0x111111, accent:0x39FF14, acc:'necklace' },
+  { name:'StreetWolf', skin:0xc68642, shirt:0xFFD700, pants:0x4A148C, hair:0x3a1a0a, accent:0x111111, acc:'none' },
+  { name:'ChromeKid', skin:0xffdbac, shirt:0xFFFFFF, pants:0x1A237E, hair:0x111111, accent:0x111111, acc:'backpack' },
+  { name:'PixelRush', skin:0x8d5524, shirt:0xFF1493, pants:0x6D4C41, hair:0xffd700, accent:0x9B59B6, acc:'earring' },
+  { name:'FrostBoy', skin:0xf5c6a0, shirt:0x00BCD4, pants:0x2C3E50, hair:0x111111, accent:0xFFFFFF, acc:'necklace' },
+  { name:'UrbanFox', skin:0xe0ac69, shirt:0x9B59B6, pants:0x1B5E20, hair:0x3a1a0a, accent:0xE74C3C, acc:'none' },
+  { name:'PlasmaKid', skin:0xffdbac, shirt:0xF39C12, pants:0xB71C1C, hair:0x111111, accent:0x9B59B6, acc:'backpack' },
+  { name:'LunarBoy', skin:0xc68642, shirt:0x34495E, pants:0x34495E, hair:0x6b4423, accent:0xFFD700, acc:'earring' },
+  { name:'SolarFlare', skin:0xf5c6a0, shirt:0xE67E22, pants:0x1A237E, hair:0x111111, accent:0xFF1493, acc:'necklace' }
 ];
-const CHARACTERS = [...FREE_CHARS, ...PAID_CHARS];
+G1.forEach((c,i) => CHARS.push({
+  id:'cap'+i, name:c.name,
+  rarity: i<4?'comune':(i<8?'raro':'epico'),
+  price: i<8?0:2000,
+  style:'cap',
+  skin:c.skin, shirt:c.shirt, pants:c.pants, hair:c.hair,
+  shoeColor:0x39FF14, shoeSoleColor:0xFFFFFF,
+  accent:c.accent, accessory:c.acc
+}));
+
+// Group 2: BEANIE + GLASSES + BAGGY JEANS + GREEN SHOES (10)
+const G2 = [
+  { name:'GlitchBoy', skin:0xf5c6a0, shirt:0xE74C3C, pants:0x2C3E50, hair:0x111111, accent:0xE74C3C, acc:'earring' },
+  { name:'StaticKid', skin:0xe0ac69, shirt:0x9B59B6, pants:0x1a1a1a, hair:0x111111, accent:0x9B59B6, acc:'necklace' },
+  { name:'EchoRush', skin:0xffdbac, shirt:0x3498DB, pants:0x1A237E, hair:0x3a1a0a, accent:0x3498DB, acc:'none' },
+  { name:'VibeKing', skin:0xc68642, shirt:0xFFD700, pants:0x4A148C, hair:0x111111, accent:0xFFD700, acc:'backpack' },
+  { name:'ChillWave', skin:0x8d5524, shirt:0x1ABC9C, pants:0x6D4C41, hair:0x111111, accent:0x1ABC9C, acc:'earring' },
+  { name:'TechNinja', skin:0xf5c6a0, shirt:0x111111, pants:0x1a1a1a, hair:0x3a1a0a, accent:0x111111, acc:'necklace' },
+  { name:'DataBoy', skin:0xe0ac69, shirt:0x2ECC71, pants:0x1B5E20, hair:0x6b4423, accent:0x2ECC71, acc:'none' },
+  { name:'ByteBeat', skin:0xffdbac, shirt:0xE67E22, pants:0xB71C1C, hair:0x111111, accent:0xE67E22, acc:'backpack' },
+  { name:'WaveRider', skin:0xc68642, shirt:0xFFFFFF, pants:0x34495E, hair:0xffd700, accent:0xFFFFFF, acc:'earring' },
+  { name:'SignalKid', skin:0xf5c6a0, shirt:0xFF1493, pants:0x1A237E, hair:0x111111, accent:0xFF1493, acc:'necklace' }
+];
+G2.forEach((c,i) => CHARS.push({
+  id:'beanie'+i, name:c.name,
+  rarity: i<4?'comune':(i<8?'raro':'epico'),
+  price: i<8?0:2200,
+  style:'beanie',
+  skin:c.skin, shirt:c.shirt, pants:c.pants, hair:c.hair,
+  shoeColor:0x39FF14, shoeSoleColor:0xFFFFFF,
+  accent:c.accent, accessory:c.acc
+}));
+
+// Group 3: PONYTAIL + CROP TOP + LEGGINGS + RED SHOES (10)
+const G3 = [
+  { name:'NeonGirl', skin:0xffdbac, shirt:0x9B59B6, pants:0x1a1a1a, hair:0xFF1493, accent:0x9B59B6, acc:'earring' },
+  { name:'StarRider', skin:0xf5c6a0, shirt:0x00BCD4, pants:0x1A237E, hair:0xffd700, accent:0x00BCD4, acc:'necklace' },
+  { name:'PrismGirl', skin:0xffdbac, shirt:0xFFD700, pants:0x4A148C, hair:0xFFFFFF, accent:0xFFFFFF, acc:'none' },
+  { name:'CrystalRush', skin:0xe0ac69, shirt:0xFF1493, pants:0x6D4C41, hair:0x3498DB, accent:0x3498DB, acc:'backpack' },
+  { name:'SkySpark', skin:0xc68642, shirt:0xFFD700, pants:0x1a1a1a, hair:0xE74C3C, accent:0xE74C3C, acc:'earring' },
+  { name:'LaserGirl', skin:0xf5c6a0, shirt:0xE74C3C, pants:0x1B5E20, hair:0x2ECC71, accent:0xE74C3C, acc:'necklace' },
+  { name:'AuroraKid', skin:0xffdbac, shirt:0x00BCD4, pants:0xFFFFFF, hair:0x9B59B6, accent:0x9B59B6, acc:'none' },
+  { name:'BlazeGirl', skin:0xe0ac69, shirt:0xE67E22, pants:0x1a1a1a, hair:0xFF1493, accent:0xE67E22, acc:'backpack' },
+  { name:'NovaQueen', skin:0xf5c6a0, shirt:0xFF1493, pants:0x4A148C, hair:0xFFFFFF, accent:0xFF1493, acc:'earring' },
+  { name:'GlitterFox', skin:0xffdbac, shirt:0xFFFFFF, pants:0x00BCD4, hair:0xFF1493, accent:0xFFFFFF, acc:'necklace' }
+];
+G3.forEach((c,i) => CHARS.push({
+  id:'pony'+i, name:c.name,
+  rarity: i<4?'comune':(i<8?'raro':'epico'),
+  price: i<8?0:2400,
+  style:'ponytail',
+  skin:c.skin, shirt:c.shirt, pants:c.pants, hair:c.hair,
+  shoeColor:0xFF0044, shoeSoleColor:0xFFFFFF,
+  accent:c.accent, accessory:c.acc
+}));
+
+// Group 4: CROWN + BLUE SHIRT + RED SHORTS + RED SHOES (10)
+const G4 = [
+  { name:'RoyalKid', skin:0xf5c6a0, shirt:0x1E3A8A, pants:0xE74C3C, hair:0x6b4423, accent:0xFFD700, acc:'earring' },
+  { name:'KingRush', skin:0xe0ac69, shirt:0x00BCD4, pants:0xE74C3C, hair:0x111111, accent:0xC0C0C0, acc:'necklace' },
+  { name:'ThroneBoy', skin:0xffdbac, shirt:0x1E3A8A, pants:0x1a1a1a, hair:0x6b4423, accent:0xFFD700, acc:'none' },
+  { name:'CrownPrince', skin:0xc68642, shirt:0xFFFFFF, pants:0xE74C3C, hair:0x111111, accent:0xE74C3C, acc:'backpack' },
+  { name:'DukeBlaze', skin:0x8d5524, shirt:0xE74C3C, pants:0x111111, hair:0x3a1a0a, accent:0xFFD700, acc:'earring' },
+  { name:'EmperorNeon', skin:0xf5c6a0, shirt:0x00BCD4, pants:0xE74C3C, hair:0xffd700, accent:0xFFD700, acc:'necklace' },
+  { name:'RegalKid', skin:0xe0ac69, shirt:0x1E3A8A, pants:0xE74C3C, hair:0x6b4423, accent:0x9B59B6, acc:'none' },
+  { name:'RoyalJester', skin:0xffdbac, shirt:0x9B59B6, pants:0xFFD700, hair:0x111111, accent:0xE74C3C, acc:'backpack' },
+  { name:'MonarchBoy', skin:0xc68642, shirt:0x1A237E, pants:0xE74C3C, hair:0x111111, accent:0xFFD700, acc:'earring' },
+  { name:'PrincePixel', skin:0xf5c6a0, shirt:0x00BCD4, pants:0xFF1493, hair:0x6b4423, accent:0xFFD700, acc:'necklace' }
+];
+G4.forEach((c,i) => CHARS.push({
+  id:'crown'+i, name:c.name,
+  rarity: i<3?'raro':(i<6?'epico':'leggendario'),
+  price: i<3?0:(i<6?2500:3500),
+  style:'crown',
+  skin:c.skin, shirt:c.shirt, pants:c.pants, hair:c.hair,
+  shoeColor:0xFF0044, shoeSoleColor:0xFFFFFF,
+  accent:c.accent, accessory:c.acc
+}));
+
+// Special: Spugna Gialla + Clown Pazzo (keep from v7.2)
+CHARS.push(
+  { id:'sponge', name:'Spugna Gialla', rarity:'epico', price:0, style:'sponge',
+    skin:0xFFD700, shirt:0xFFD700, pants:0x8B4513, hair:0xFFD700,
+    shoeColor:0x111111, shoeSoleColor:0xFFFFFF, accent:0xFFD700, accessory:'none' },
+  { id:'clown', name:'Clown Pazzo', rarity:'leggendario', price:3000, style:'clown',
+    skin:0xFFFFFF, shirt:0x9B59B6, pants:0x1a1a1a, hair:0x2ECC71,
+    shoeColor:0xE74C3C, shoeSoleColor:0xFFFFFF, accent:0xE74C3C, accessory:'none' }
+);
+
+const CHARACTERS = CHARS;
+// Free chars: unlocked by default
+const FREE_CHARS = CHARS.filter(c => c.price === 0);
+
 const MASKS = [
   {id:'white',name:'Maschera Bianca',cost:0,color:0xffffff},
   {id:'gold',name:'Maschera Oro',cost:500,color:0xFFD700},
@@ -537,7 +604,7 @@ const MASKS = [
   {id:'green',name:'Maschera Verde KX',cost:1500,color:0x22cc22}
 ];
 
-/* ============ 50 CHRISTMAS + 50 NORMAL MAPS ============ */
+/* ============ 100 MAPS ============ */
 const XMAS_NAMES = ['Villaggio Babbo Natale','Polo Nord','New York Natalizia','Foresta Incantata',
   'Tetti con Neve','Città di Ghiaccio','Piazza dei Regali','Stazione Nord','Cortile degli Elfi','Sala dei Giocattoli'];
 const XMAS_PALETTES = [
@@ -571,33 +638,23 @@ for (let i = 0; i < 50; i++) {
   const baseName = XMAS_NAMES[i % 10];
   const variant = Math.floor(i / 10) + 1;
   const pal = XMAS_PALETTES[i % XMAS_PALETTES.length];
-  MAPS['xmas'+i] = {
-    id:'xmas'+i, name: baseName + ' ' + toRoman(variant), mode:'christmas',
-    sky: pal.sky, fog: pal.sky, fogDensity:0.003,
-    roadColor: pal.road, lineColor:0xFFFFFF, lineEmissive:0xCCCCCC,
-    buildingColors: pal.buildings, roofColor: pal.roof,
-    windowColor:0xFFCC66, windowEmissive:0xFFAA00,
-    ambient:0xFFFFFF, ambientIntensity:0.9, sunColor:0xFFFFFF, sunIntensity:1.6,
-    hemiSky: pal.sky, hemiGround:0x445544,
-    trainColors:[0xc41e3a,0x2e8b57,0x4a90e2,0xffd700],
-    trees:true, clouds:true, snow:true
-  };
+  MAPS['xmas'+i] = { id:'xmas'+i, name: baseName+' '+toRoman(variant), mode:'christmas',
+    sky:pal.sky, fog:pal.sky, fogDensity:0.003, roadColor:pal.road, lineColor:0xFFFFFF,
+    lineEmissive:0xCCCCCC, buildingColors:pal.buildings, roofColor:pal.roof,
+    windowColor:0xFFCC66, windowEmissive:0xFFAA00, ambient:0xFFFFFF, ambientIntensity:0.9,
+    sunColor:0xFFFFFF, sunIntensity:1.6, hemiSky:pal.sky, hemiGround:0x445544,
+    trainColors:[0xc41e3a,0x2e8b57,0x4a90e2,0xffd700], trees:true, clouds:true, snow:true };
 }
 for (let i = 0; i < 50; i++) {
   const baseName = NORMAL_NAMES[i % 10];
   const variant = Math.floor(i / 10) + 1;
   const pal = NORMAL_PALETTES[i % NORMAL_PALETTES.length];
-  MAPS['normal'+i] = {
-    id:'normal'+i, name: baseName + ' ' + toRoman(variant), mode:'normal',
-    sky: pal.sky, fog: pal.sky, fogDensity:0.0025,
-    roadColor: pal.road, lineColor:0xFFFFFF, lineEmissive:0x888888,
-    buildingColors: pal.buildings, roofColor: pal.roof,
-    windowColor:0xFFFFFF, windowEmissive:0xFFEE88,
-    ambient:0xFFFFFF, ambientIntensity:1.0, sunColor:0xFFFFFF, sunIntensity:1.7,
-    hemiSky: pal.sky, hemiGround:0x888866,
-    trainColors:[0xE74C3C,0x3498DB,0x2ECC71,0xF39C12,0x9B59B6],
-    trees:true, clouds:true, snow:false
-  };
+  MAPS['normal'+i] = { id:'normal'+i, name: baseName+' '+toRoman(variant), mode:'normal',
+    sky:pal.sky, fog:pal.sky, fogDensity:0.0025, roadColor:pal.road, lineColor:0xFFFFFF,
+    lineEmissive:0x888888, buildingColors:pal.buildings, roofColor:pal.roof,
+    windowColor:0xFFFFFF, windowEmissive:0xFFEE88, ambient:0xFFFFFF, ambientIntensity:1.0,
+    sunColor:0xFFFFFF, sunIntensity:1.7, hemiSky:pal.sky, hemiGround:0x888866,
+    trainColors:[0xE74C3C,0x3498DB,0x2ECC71,0xF39C12,0x9B59B6], trees:true, clouds:true, snow:false };
 }
 
 /* ============ AUDIO ============ */
@@ -624,7 +681,6 @@ let lastWarningTime=0;
 function playWarningSound(){if(soundMuted||!audioCtx)return;if(Date.now()-lastWarningTime<400)return;lastWarningTime=Date.now();tone({type:'square',freq:900,freqEnd:600,dur:0.12,gain:0.1})}
 function playHornSound(){if(soundMuted||!audioCtx)return;tone({type:'sawtooth',freq:280,freqEnd:220,dur:0.35,gain:0.14});setTimeout(()=>tone({type:'sawtooth',freq:260,freqEnd:200,dur:0.35,gain:0.14}),200)}
 function playLandOnTrainSound(){tone({type:'sine',freq:600,freqEnd:400,dur:0.12,gain:0.14})}
-
 let musicInterval=null,musicPlaying=false;
 const JINGLE_MELODY=[{n:659,d:0.20},{n:659,d:0.20},{n:659,d:0.40},{n:659,d:0.20},{n:659,d:0.20},{n:659,d:0.40},{n:659,d:0.20},{n:784,d:0.20},{n:523,d:0.30},{n:587,d:0.20},{n:659,d:0.60},{n:698,d:0.20},{n:698,d:0.20},{n:698,d:0.30},{n:698,d:0.20},{n:698,d:0.20},{n:659,d:0.30},{n:659,d:0.15},{n:659,d:0.15},{n:659,d:0.15},{n:659,d:0.15},{n:659,d:0.20},{n:587,d:0.20},{n:587,d:0.20},{n:659,d:0.20},{n:587,d:0.40},{n:784,d:0.40}];
 function scheduleJingleCycle(){
@@ -675,9 +731,9 @@ function initLights(){
   }
 }
 function updateSnowAndLights(){
-  const showSnow = (selectedMode==='christmas') && !snowFrozen && !potatoMode;
+  const showSnow=(selectedMode==='christmas')&&!snowFrozen&&!potatoMode;
   if(!showSnow){snowContainer.innerHTML=''}
-  else {renderSnow(potatoMode?60:150)}
+  else{renderSnow(potatoMode?60:150)}
   document.querySelectorAll('.light-bulb').forEach(b=>{
     if(potatoMode||snowFrozen)b.classList.add('frozen');else b.classList.remove('frozen');
   });
@@ -699,7 +755,7 @@ function loadSettings(){
 }
 function saveSettings(){lsSet(LS.settings,JSON.stringify(settings))}
 
-/* ============ SCENE (antialias false di default) ============ */
+/* ============ SCENE ============ */
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87CEEB);
 const camera = new THREE.PerspectiveCamera(65,window.innerWidth/window.innerHeight,0.1,400);
@@ -724,163 +780,491 @@ const ambientLight = new THREE.AmbientLight(0xffffff,0.9); scene.add(ambientLigh
 const hemiLight = new THREE.HemisphereLight(0x87CEEB,0x444444,0.6);
 hemiLight.position.set(0,20,0); scene.add(hemiLight);
 const dirLight = new THREE.DirectionalLight(0xffffff,1.4);
-dirLight.position.set(10,20,8);
-dirLight.castShadow = false;
-scene.add(dirLight);
+dirLight.position.set(10,20,8); dirLight.castShadow = false; scene.add(dirLight);
 const heroLight = new THREE.PointLight(0xffffff,0.8,14,2);
 heroLight.position.set(0,2.2,1.2); scene.add(heroLight);
 
-/* ============ CHARACTER ============ */
+/* ============================================================
+   TOON MATERIAL SYSTEM — Subway Sweats aesthetic
+   ============================================================ */
+function createToonGradient() {
+  const colors = new Uint8Array([
+    90,90,90,255,
+    170,170,170,255,
+    255,255,255,255
+  ]);
+  const tex = new THREE.DataTexture(colors, 3, 1, THREE.RGBAFormat);
+  tex.minFilter = THREE.NearestFilter;
+  tex.magFilter = THREE.NearestFilter;
+  tex.generateMipmaps = false;
+  tex.needsUpdate = true;
+  return tex;
+}
+const TOON_GRADIENT = createToonGradient();
+
+function toonMat(color) {
+  return new THREE.MeshToonMaterial({
+    color: color,
+    gradientMap: TOON_GRADIENT
+  });
+}
+
+const outlineMat = new THREE.MeshBasicMaterial({
+  color: 0x111111,
+  side: THREE.BackSide
+});
+
+const CHAR_MATS = {
+  skin:       toonMat(0xf5c6a0),
+  shirt:      toonMat(0x1a1a1a),
+  pants:      toonMat(0x181818),
+  hair:       toonMat(0x111111),
+  shoes:      toonMat(0x39FF14),
+  shoeSole:   toonMat(0xFFFFFF),
+  eyeW:       new THREE.MeshBasicMaterial({ color:0xFFFFFF }),
+  eyeB:       new THREE.MeshBasicMaterial({ color:0x000000 }),
+  eyeGlint:   new THREE.MeshBasicMaterial({ color:0xFFFFFF }),
+  smile:      new THREE.MeshBasicMaterial({ color:0xcc3333 }),
+  mouthDark:  new THREE.MeshBasicMaterial({ color:0x220000 }),
+  acc:        toonMat(0xFFD700),
+  accB:       toonMat(0x333333),
+  glass:      toonMat(0x1a1a1a),
+  pack:       toonMat(0x3498DB),
+  cape:       toonMat(0x0a0a0a),
+  beard:      toonMat(0xFFFFFF),
+  sack:       toonMat(0x8B4513),
+  mask:       toonMat(0xFFFFFF),
+  web:        toonMat(0xFFFFFF),
+  belt:       toonMat(0x1a1a1a),
+  beltBuckle: toonMat(0xFFD700),
+  logo:       new THREE.MeshBasicMaterial({ color:0xFFD700 }),
+  tie:        toonMat(0xFF0000),
+  clownNose:  toonMat(0xFF0000),
+  clownGreen: new THREE.MeshBasicMaterial({ color:0x2ECC71 }),
+  clownFlowerP: toonMat(0xFF69B4),
+  clownFlowerC: toonMat(0xFFFF00),
+  spongeHole: toonMat(0xccaa00),
+  hoodie:     toonMat(0x1a1a1a)
+};
+
+/* ============ PLAYER GROUP ============ */
 const playerGroup = new THREE.Group();
 scene.add(playerGroup);
-const CHAR_MATS = {
-  skin:new THREE.MeshStandardMaterial({color:0xf5c6a0,roughness:0.65}),
-  shirt:new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.7}),
-  pants:new THREE.MeshStandardMaterial({color:0x181818,roughness:0.85}),
-  hair:new THREE.MeshStandardMaterial({color:0x111111,roughness:0.75}),
-  shoes:new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.4}),
-  eyeW:new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.3}),
-  eyeB:new THREE.MeshStandardMaterial({color:0x000000,roughness:0.3}),
-  mask:new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.3,emissive:0x222222}),
-  web:new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.3}),
-  acc:new THREE.MeshStandardMaterial({color:0xff6b6b,roughness:0.6}),
-  accB:new THREE.MeshStandardMaterial({color:0x333333,roughness:0.4,metalness:0.5}),
-  glass:new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:0.3,metalness:0.7}),
-  pack:new THREE.MeshStandardMaterial({color:0x3498db,roughness:0.7}),
-  cape:new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:0.7,side:THREE.DoubleSide}),
-  beard:new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),
-  sack:new THREE.MeshStandardMaterial({color:0x8b4513,roughness:0.85})
-};
 const P = {};
-function buildCharacter(){
-  const g=new THREE.Group();
-  const headG=new THREE.Group();headG.position.y=2.42;
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.42,18,18),CHAR_MATS.skin);
-  headG.add(head);P.head=head;
-  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.44,18,18,0,Math.PI*2,0,Math.PI*0.55),CHAR_MATS.hair);
-  hair.position.y=0.06;headG.add(hair);P.hair=hair;
-  const eyeWGeo=new THREE.SphereGeometry(0.115,12,12);
-  P.eyeWL=new THREE.Mesh(eyeWGeo,CHAR_MATS.eyeW);P.eyeWL.position.set(-0.15,0.03,-0.32);headG.add(P.eyeWL);
-  P.eyeWR=new THREE.Mesh(eyeWGeo,CHAR_MATS.eyeW);P.eyeWR.position.set(0.15,0.03,-0.32);headG.add(P.eyeWR);
-  const pupilGeo=new THREE.SphereGeometry(0.055,8,8);
-  P.pupilL=new THREE.Mesh(pupilGeo,CHAR_MATS.eyeB);P.pupilL.position.set(-0.15,0.03,-0.4);headG.add(P.pupilL);
-  P.pupilR=new THREE.Mesh(pupilGeo,CHAR_MATS.eyeB);P.pupilR.position.set(0.15,0.03,-0.4);headG.add(P.pupilR);
-  P.mask=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.22,0.1),CHAR_MATS.mask);
-  P.mask.position.set(0,0.03,-0.4);P.mask.visible=false;headG.add(P.mask);
-  const webG=new THREE.Group();
-  for(let i=0;i<4;i++){const line=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.05,0.4),CHAR_MATS.web);
-    line.rotation.z=(i/4)*Math.PI*2;line.position.set(0,0.03,-0.42);webG.add(line)}
-  headG.add(webG);webG.visible=false;P.web=webG;
-  P.hat=new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.36,0.35,12),CHAR_MATS.accB);
-  P.hat.position.y=0.42;P.hat.visible=false;headG.add(P.hat);
-  P.capTop=new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.42,0.18,12),CHAR_MATS.acc);
-  P.capTop.position.y=0.4;P.capTop.visible=false;headG.add(P.capTop);
-  P.capBrim=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.06,0.4),CHAR_MATS.acc);
-  P.capBrim.position.set(0,0.32,-0.38);P.capBrim.visible=false;headG.add(P.capBrim);
-  P.glasses=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.14,0.06),CHAR_MATS.glass);
-  P.glasses.position.set(0,0.03,-0.42);P.glasses.visible=false;headG.add(P.glasses);
-  P.bandana=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.12,0.8),CHAR_MATS.acc);
-  P.bandana.position.y=0.18;P.bandana.visible=false;headG.add(P.bandana);
-  P.goggles=new THREE.Mesh(new THREE.BoxGeometry(0.68,0.18,0.1),CHAR_MATS.accB);
-  P.goggles.position.set(0,0.14,-0.38);P.goggles.visible=false;headG.add(P.goggles);
-  P.headphoneL=new THREE.Mesh(new THREE.TorusGeometry(0.13,0.045,6,12),CHAR_MATS.accB);
-  P.headphoneL.position.set(-0.42,0.02,0);P.headphoneL.rotation.y=Math.PI/2;
-  P.headphoneL.visible=false;headG.add(P.headphoneL);
-  P.headphoneR=P.headphoneL.clone();P.headphoneR.position.x=0.42;P.headphoneR.visible=false;headG.add(P.headphoneR);
-  P.beard=new THREE.Mesh(new THREE.SphereGeometry(0.3,10,10),CHAR_MATS.beard);
-  P.beard.position.set(0,-0.15,-0.32);P.beard.scale.set(1.2,0.8,0.6);
-  P.beard.visible=false;headG.add(P.beard);
-  P.antlers=new THREE.Group();
-  const aL=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.35,6),CHAR_MATS.sack);
-  aL.position.set(-0.25,0.5,0);aL.rotation.z=0.3;P.antlers.add(aL);
-  const aR=aL.clone();aR.position.x=0.25;aR.rotation.z=-0.3;P.antlers.add(aR);
-  P.antlers.visible=false;headG.add(P.antlers);
-  g.add(headG);P.headGroup=headG;
-  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.36,0.65,6,12),CHAR_MATS.shirt);
-  torso.position.y=1.55;g.add(torso);P.torso=torso;
-  P.backpack=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.6,0.28),CHAR_MATS.pack);
-  P.backpack.position.set(0,1.5,0.45);P.backpack.visible=false;g.add(P.backpack);
-  P.cape=new THREE.Mesh(new THREE.BoxGeometry(0.75,1.4,0.06),CHAR_MATS.cape);
-  P.cape.position.set(0,1.35,0.4);P.cape.visible=false;g.add(P.cape);
-  P.sack=new THREE.Mesh(new THREE.SphereGeometry(0.38,12,12),CHAR_MATS.sack);
-  P.sack.position.set(0.3,1.0,0.4);P.sack.visible=false;P.sack.scale.set(1,1.2,0.9);g.add(P.sack);
-  function makeArm(side){
-    const sign=side==='L'?-1:1;
-    const shoulder=new THREE.Group();shoulder.position.set(sign*0.48,1.8,0);
-    const upper=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.3,4,8),CHAR_MATS.skin);
-    upper.position.y=-0.2;shoulder.add(upper);
-    const elbow=new THREE.Group();elbow.position.y=-0.42;
-    const fore=new THREE.Mesh(new THREE.CapsuleGeometry(0.095,0.28,4,8),CHAR_MATS.skin);
-    fore.position.y=-0.18;elbow.add(fore);
-    const hand=new THREE.Mesh(new THREE.SphereGeometry(0.1,8,8),CHAR_MATS.skin);
-    hand.position.y=-0.4;elbow.add(hand);
-    shoulder.add(elbow);g.add(shoulder);
-    return{shoulder,elbow};
+
+/* Helper: add a part with optional outline */
+function addPart(parent, geometry, material, opts) {
+  opts = opts || {};
+  const group = new THREE.Group();
+  if (opts.position) group.position.set(opts.position[0], opts.position[1], opts.position[2]);
+  if (opts.rotation) group.rotation.set(opts.rotation[0], opts.rotation[1], opts.rotation[2]);
+  if (opts.scale) group.scale.set(opts.scale[0], opts.scale[1], opts.scale[2]);
+  if (opts.outline !== false) {
+    const outline = new THREE.Mesh(geometry, outlineMat);
+    outline.scale.setScalar(1.10);
+    outline.userData.isOutline = true;
+    group.add(outline);
   }
-  P.armL=makeArm('L');P.armR=makeArm('R');
-  function makeLeg(side){
-    const sign=side==='L'?-1:1;
-    const hip=new THREE.Group();hip.position.set(sign*0.18,0.95,0);
-    const thigh=new THREE.Mesh(new THREE.CapsuleGeometry(0.14,0.35,4,8),CHAR_MATS.pants);
-    thigh.position.y=-0.2;hip.add(thigh);
-    const knee=new THREE.Group();knee.position.y=-0.5;
-    const shin=new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.32,4,8),CHAR_MATS.pants);
-    shin.position.y=-0.18;knee.add(shin);
-    const shoe=new THREE.Mesh(new THREE.BoxGeometry(0.24,0.14,0.42),CHAR_MATS.shoes);
-    shoe.position.set(0,-0.42,-0.08);knee.add(shoe);
-    hip.add(knee);g.add(hip);
-    return{hip,knee};
+  const mesh = new THREE.Mesh(geometry, material);
+  group.add(mesh);
+  parent.add(group);
+  return { group, mesh };
+}
+
+/* ============================================================
+   BUILD CHARACTER — Subway Sweats proportions
+   ============================================================ */
+function buildCharacter() {
+  const g = new THREE.Group();
+  
+  // --- HEAD (huge, cartoon) ---
+  const headG = new THREE.Group();
+  headG.position.y = 2.42;
+  const head = addPart(headG, new THREE.SphereGeometry(0.48, 20, 20), CHAR_MATS.skin);
+  P.head = head.mesh;
+  
+  // --- HAIR (small tuft) ---
+  const hair = addPart(headG, new THREE.SphereGeometry(0.50, 18, 18, 0, Math.PI*2, 0, Math.PI*0.55), CHAR_MATS.hair);
+  hair.group.position.y = 0.05;
+  P.hair = hair.mesh;
+  
+  // --- BIG EYES ---
+  const eyeGeo = new THREE.SphereGeometry(0.15, 14, 14);
+  P.eyeWL = addPart(headG, eyeGeo, CHAR_MATS.eyeW, { position: [-0.17, 0.03, -0.36], outline: false }).mesh;
+  P.eyeWR = addPart(headG, eyeGeo, CHAR_MATS.eyeW, { position: [0.17, 0.03, -0.36], outline: false }).mesh;
+  
+  const pupilGeo = new THREE.SphereGeometry(0.085, 10, 10);
+  P.pupilL = addPart(headG, pupilGeo, CHAR_MATS.eyeB, { position: [-0.17, 0.03, -0.46], outline: false }).mesh;
+  P.pupilR = addPart(headG, pupilGeo, CHAR_MATS.eyeB, { position: [0.17, 0.03, -0.46], outline: false }).mesh;
+  
+  const glintGeo = new THREE.SphereGeometry(0.03, 6, 6);
+  P.glintL = addPart(headG, glintGeo, CHAR_MATS.eyeGlint, { position: [-0.20, 0.07, -0.50], outline: false }).mesh;
+  P.glintR = addPart(headG, glintGeo, CHAR_MATS.eyeGlint, { position: [0.14, 0.07, -0.50], outline: false }).mesh;
+  
+  // --- THIN EYEBROWS ---
+  const browGeo = new THREE.BoxGeometry(0.14, 0.032, 0.03);
+  P.eyebrowL = addPart(headG, browGeo, CHAR_MATS.hair, { position: [-0.17, 0.21, -0.44], outline: false }).mesh;
+  P.eyebrowR = addPart(headG, browGeo, CHAR_MATS.hair, { position: [0.17, 0.21, -0.44], outline: false }).mesh;
+  
+  // --- NOSE (tiny) ---
+  P.nose = addPart(headG, new THREE.SphereGeometry(0.045, 8, 8), CHAR_MATS.skin, { position: [0, -0.03, -0.46], outline: false }).mesh;
+  
+  // --- EARS ---
+  P.earL = addPart(headG, new THREE.SphereGeometry(0.085, 8, 8), CHAR_MATS.skin, { position: [-0.48, 0.02, 0], scale: [0.5, 1, 0.8] }).mesh;
+  P.earR = addPart(headG, new THREE.SphereGeometry(0.085, 8, 8), CHAR_MATS.skin, { position: [0.48, 0.02, 0], scale: [0.5, 1, 0.8] }).mesh;
+  
+  // --- SMALL SMILE ---
+  P.smile = addPart(headG, new THREE.TorusGeometry(0.13, 0.025, 6, 14, Math.PI), CHAR_MATS.smile, {
+    position: [0, -0.18, -0.43], rotation: [Math.PI, 0, Math.PI], outline: false
+  }).mesh;
+  
+  // --- MOUTH OPEN ---
+  P.mouthOpen = addPart(headG, new THREE.CircleGeometry(0.065, 14), CHAR_MATS.mouthDark, {
+    position: [0, -0.18, -0.46], rotation: [0, Math.PI, 0], outline: false
+  }).mesh;
+  P.mouthOpen.visible = false;
+  
+  // --- CLOWN NOSE ---
+  P.clownNose = addPart(headG, new THREE.SphereGeometry(0.075, 10, 10), CHAR_MATS.clownNose, {
+    position: [0, -0.05, -0.48], outline: false
+  }).mesh;
+  P.clownNose.visible = false;
+  
+  // --- SPONGE HOLES ---
+  P.spongeHoles = new THREE.Group();
+  for (let i = 0; i < 10; i++) {
+    const hole = new THREE.Mesh(new THREE.SphereGeometry(0.045 + Math.random()*0.02, 6, 6), CHAR_MATS.spongeHole);
+    hole.position.set((Math.random()-0.5)*0.6, (Math.random()-0.2)*0.6, -0.40);
+    P.spongeHoles.add(hole);
   }
-  P.legL=makeLeg('L');P.legR=makeLeg('R');
-  P.shield=new THREE.Mesh(new THREE.SphereGeometry(1.2,16,16),
-    new THREE.MeshBasicMaterial({color:0x22ff44,transparent:true,opacity:0.18,side:THREE.DoubleSide,depthWrite:false}));
-  P.shield.visible=false;g.add(P.shield);
-  P.jetpackVisual=new THREE.Group();
-  P.jetpackVisual.position.set(0,1.5,0.55);
-  const jpBody=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.28,0.7,10),CHAR_MATS.accB);
+  P.spongeHoles.visible = false;
+  headG.add(P.spongeHoles);
+  
+  // --- MASK ---
+  P.mask = addPart(headG, new THREE.BoxGeometry(0.62, 0.20, 0.08), CHAR_MATS.mask, {
+    position: [0, 0.03, -0.44], outline: false
+  }).mesh;
+  P.mask.visible = false;
+  
+  // --- WEB ---
+  const webG = new THREE.Group();
+  for (let i = 0; i < 4; i++) {
+    const line = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.40), CHAR_MATS.web);
+    line.rotation.z = (i/4) * Math.PI * 2;
+    line.position.set(0, 0.03, -0.46);
+    webG.add(line);
+  }
+  headG.add(webG); webG.visible = false; P.web = webG;
+  
+  // --- CAP (crooked) ---
+  P.capTop = addPart(headG, new THREE.CylinderGeometry(0.46, 0.46, 0.16, 12), CHAR_MATS.acc, {
+    position: [0, 0.42, 0], rotation: [0, 0, 0.18]
+  }).mesh;
+  P.capTop.visible = false;
+  P.capBrim = addPart(headG, new THREE.BoxGeometry(0.52, 0.06, 0.42), CHAR_MATS.acc, {
+    position: [0, 0.35, -0.38], rotation: [0, 0, 0.18], outline: false
+  }).mesh;
+  P.capBrim.visible = false;
+  
+  // --- BEANIE (round) ---
+  P.hat = addPart(headG, new THREE.SphereGeometry(0.50, 16, 12, 0, Math.PI*2, 0, Math.PI*0.7), CHAR_MATS.acc, {
+    position: [0, 0.16, 0]
+  }).mesh;
+  P.hat.visible = false;
+  
+  // --- CROWN (cardboard) ---
+  P.crown = new THREE.Group();
+  const crownBase = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.14, 8), CHAR_MATS.accB);
+  crownBase.position.y = 0.42; P.crown.add(crownBase);
+  for (let i = 0; i < 5; i++) {
+    const spike = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.22, 4), CHAR_MATS.accB);
+    const ang = (i/5) * Math.PI * 2;
+    spike.position.set(Math.cos(ang)*0.36, 0.56, Math.sin(ang)*0.36);
+    P.crown.add(spike);
+  }
+  P.crown.visible = false; headG.add(P.crown);
+  
+  // --- GLASSES (big square black) ---
+  P.glasses = addPart(headG, new THREE.BoxGeometry(0.66, 0.20, 0.06), CHAR_MATS.glass, {
+    position: [0, 0.03, -0.46], outline: false
+  }).mesh;
+  P.glasses.visible = false;
+  
+  // --- BANDANA ---
+  P.bandana = addPart(headG, new THREE.BoxGeometry(0.82, 0.10, 0.82), CHAR_MATS.acc, {
+    position: [0, 0.22, 0], outline: false
+  }).mesh;
+  P.bandana.visible = false;
+  
+  // --- GOGGLES ---
+  P.goggles = addPart(headG, new THREE.BoxGeometry(0.68, 0.16, 0.08), CHAR_MATS.accB, {
+    position: [0, 0.16, -0.42], outline: false
+  }).mesh;
+  P.goggles.visible = false;
+  
+  // --- HEADPHONES ---
+  P.headphoneL = addPart(headG, new THREE.TorusGeometry(0.13, 0.04, 6, 12), CHAR_MATS.accB, {
+    position: [-0.44, 0.04, 0], rotation: [0, Math.PI/2, 0]
+  }).mesh;
+  P.headphoneL.visible = false;
+  P.headphoneR = addPart(headG, new THREE.TorusGeometry(0.13, 0.04, 6, 12), CHAR_MATS.accB, {
+    position: [0.44, 0.04, 0], rotation: [0, Math.PI/2, 0]
+  }).mesh;
+  P.headphoneR.visible = false;
+  
+  // --- BEARD ---
+  P.beard = addPart(headG, new THREE.SphereGeometry(0.32, 12, 12), CHAR_MATS.beard, {
+    position: [0, -0.18, -0.34], scale: [1.2, 0.8, 0.6], outline: false
+  }).mesh;
+  P.beard.visible = false;
+  
+  // --- ANTLERS ---
+  P.antlers = new THREE.Group();
+  const aL = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.35, 6), CHAR_MATS.sack);
+  aL.position.set(-0.25, 0.5, 0); aL.rotation.z = 0.3; P.antlers.add(aL);
+  const aR = aL.clone(); aR.position.x = 0.25; aR.rotation.z = -0.3; P.antlers.add(aR);
+  P.antlers.visible = false; headG.add(P.antlers);
+  
+  // --- PONYTAIL ---
+  P.ponytail = addPart(headG, new THREE.BoxGeometry(0.14, 0.55, 0.14), CHAR_MATS.hair, {
+    position: [0, 0.06, 0.42], outline: false
+  }).mesh;
+  P.ponytail.visible = false;
+  
+  g.add(headG);
+  P.headGroup = headG;
+  
+  // --- TORSO (short) ---
+  const torso = addPart(g, new THREE.CylinderGeometry(0.32, 0.34, 0.55, 12), CHAR_MATS.shirt, {
+    position: [0, 1.55, 0]
+  });
+  P.torso = torso.mesh;
+  
+  // --- HOODIE COLLAR ---
+  P.hoodieCollar = addPart(g, new THREE.CylinderGeometry(0.36, 0.36, 0.12, 12), CHAR_MATS.hoodie, {
+    position: [0, 1.80, 0.02], outline: false
+  }).mesh;
+  P.hoodieCollar.visible = false;
+  
+  // --- BELT ---
+  P.belt = addPart(g, new THREE.BoxGeometry(0.68, 0.09, 0.52), CHAR_MATS.belt, {
+    position: [0, 1.28, 0], outline: false
+  }).mesh;
+  P.beltBuckle = addPart(g, new THREE.BoxGeometry(0.13, 0.13, 0.06), CHAR_MATS.beltBuckle, {
+    position: [0, 1.28, -0.28], outline: false
+  }).mesh;
+  
+  // --- CHEST LOGO ---
+  P.logo = addPart(g, new THREE.CircleGeometry(0.09, 10), CHAR_MATS.logo, {
+    position: [0, 1.58, -0.34], rotation: [0, Math.PI, 0], outline: false
+  }).mesh;
+  
+  // --- TIE (Spugna) ---
+  P.tie = addPart(g, new THREE.BoxGeometry(0.09, 0.30, 0.05), CHAR_MATS.tie, {
+    position: [0, 1.45, -0.34], outline: false
+  }).mesh;
+  P.tie.visible = false;
+  
+  // --- CLOWN FLOWER ---
+  P.clownFlower = new THREE.Group();
+  for (let i = 0; i < 5; i++) {
+    const petal = new THREE.Mesh(new THREE.SphereGeometry(0.045, 6, 6), CHAR_MATS.clownFlowerP);
+    const ang = (i/5) * Math.PI * 2;
+    petal.position.set(Math.cos(ang)*0.07, Math.sin(ang)*0.07, 0);
+    P.clownFlower.add(petal);
+  }
+  const clCenter = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 6), CHAR_MATS.clownFlowerC);
+  P.clownFlower.add(clCenter);
+  P.clownFlower.position.set(0.22, 1.65, -0.32);
+  P.clownFlower.visible = false; g.add(P.clownFlower);
+  
+  // --- BACKPACK ---
+  P.backpack = addPart(g, new THREE.BoxGeometry(0.44, 0.52, 0.24), CHAR_MATS.pack, {
+    position: [0, 1.55, 0.38]
+  }).mesh;
+  P.backpack.visible = false;
+  
+  // --- CAPE ---
+  P.cape = addPart(g, new THREE.BoxGeometry(0.72, 1.25, 0.06), CHAR_MATS.cape, {
+    position: [0, 1.35, 0.36], outline: false
+  }).mesh;
+  P.cape.visible = false;
+  
+  // --- SACK ---
+  P.sack = addPart(g, new THREE.SphereGeometry(0.34, 12, 12), CHAR_MATS.sack, {
+    position: [0.32, 1.0, 0.38], scale: [1, 1.2, 0.9]
+  }).mesh;
+  P.sack.visible = false;
+  
+  // --- ARMS (short) ---
+  function makeArm(side) {
+    const sign = side === 'L' ? -1 : 1;
+    const shoulder = new THREE.Group();
+    shoulder.position.set(sign * 0.44, 1.72, 0);
+    
+    const upperGeo = new THREE.CylinderGeometry(0.105, 0.10, 0.24, 8);
+    addPart(shoulder, upperGeo, CHAR_MATS.skin, { position: [0, -0.12, 0] });
+    
+    const elbow = new THREE.Group();
+    elbow.position.y = -0.24;
+    
+    const foreGeo = new THREE.CylinderGeometry(0.095, 0.09, 0.22, 8);
+    addPart(elbow, foreGeo, CHAR_MATS.skin, { position: [0, -0.11, 0] });
+    
+    const handGroup = addPart(elbow, new THREE.SphereGeometry(0.11, 8, 8), CHAR_MATS.skin, {
+      position: [0, -0.30, 0]
+    });
+    
+    shoulder.add(elbow);
+    g.add(shoulder);
+    return { shoulder, elbow, hand: handGroup.mesh };
+  }
+  P.armL = makeArm('L');
+  P.armR = makeArm('R');
+  
+  // --- LEGS (short + wide) with HUGE shoes ---
+  function makeLeg(side) {
+    const sign = side === 'L' ? -1 : 1;
+    const hip = new THREE.Group();
+    hip.position.set(sign * 0.20, 1.20, 0);
+    
+    const thighGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.35, 10);
+    const thighPart = addPart(hip, thighGeo, CHAR_MATS.pants, { position: [0, -0.175, 0] });
+    
+    const knee = new THREE.Group();
+    knee.position.y = -0.35;
+    
+    const shinGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.30, 10);
+    const shinPart = addPart(knee, shinGeo, CHAR_MATS.pants, { position: [0, -0.15, 0] });
+    
+    const shoeGroup = new THREE.Group();
+    shoeGroup.position.y = -0.30;
+    
+    // HUGE sole (thick white)
+    const soleGeo = new THREE.BoxGeometry(0.36, 0.10, 0.65);
+    addPart(shoeGroup, soleGeo, CHAR_MATS.shoeSole, { position: [0, -0.50, -0.06] });
+    
+    // HUGE upper (colored)
+    const upperGeo = new THREE.BoxGeometry(0.34, 0.45, 0.58);
+    addPart(shoeGroup, upperGeo, CHAR_MATS.shoes, { position: [0, -0.225, -0.08] });
+    
+    knee.add(shoeGroup);
+    hip.add(knee);
+    g.add(hip);
+    
+    return { hip, knee, shoe: shoeGroup, thigh: thighPart.mesh, shin: shinPart.mesh };
+  }
+  P.legL = makeLeg('L');
+  P.legR = makeLeg('R');
+  
+  // --- SHIELD ---
+  P.shield = new THREE.Mesh(new THREE.SphereGeometry(1.0, 16, 16),
+    new THREE.MeshBasicMaterial({ color:0x22ff44, transparent:true, opacity:0.18, side:THREE.DoubleSide, depthWrite:false }));
+  P.shield.visible = false; g.add(P.shield);
+  
+  // --- JETPACK ---
+  P.jetpackVisual = new THREE.Group();
+  P.jetpackVisual.position.set(0, 1.5, 0.5);
+  const jpBody = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.60, 10), CHAR_MATS.accB);
   P.jetpackVisual.add(jpBody);
-  const jpFlameL=new THREE.Mesh(new THREE.ConeGeometry(0.15,0.6,8),
-    new THREE.MeshBasicMaterial({color:0x66ccff,transparent:true,opacity:0.85}));
-  jpFlameL.position.set(-0.18,-0.55,0);jpFlameL.rotation.x=Math.PI;P.jetpackVisual.add(jpFlameL);
-  const jpFlameR=jpFlameL.clone();jpFlameR.position.x=0.18;P.jetpackVisual.add(jpFlameR);
-  P.jetpackVisual.visible=false;P.jetpackFlames=[jpFlameL,jpFlameR];g.add(P.jetpackVisual);
+  const jpFlameL = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.5, 8),
+    new THREE.MeshBasicMaterial({ color:0x66ccff, transparent:true, opacity:0.85 }));
+  jpFlameL.position.set(-0.15, -0.48, 0); jpFlameL.rotation.x = Math.PI; P.jetpackVisual.add(jpFlameL);
+  const jpFlameR = jpFlameL.clone(); jpFlameR.position.x = 0.15; P.jetpackVisual.add(jpFlameR);
+  P.jetpackVisual.visible = false; P.jetpackFlames = [jpFlameL, jpFlameR];
+  g.add(P.jetpackVisual);
+  
   return g;
 }
-const charRoot=buildCharacter();
+
+const charRoot = buildCharacter();
 charRoot.scale.setScalar(0.6);
 playerGroup.add(charRoot);
 
-function applyCharacter(id){
-  const ch=CHARACTERS.find(c=>c.id===id)||CHARACTERS[0];
+/* ============================================================
+   APPLY CHARACTER — updates materials, proportions, accessories
+   ============================================================ */
+function applyCharacter(id) {
+  const ch = CHARACTERS.find(c => c.id === id) || CHARACTERS[0];
+  
+  // Reset all accessories
+  P.hat.visible = false; P.capTop.visible = false; P.capBrim.visible = false;
+  P.crown.visible = false; P.glasses.visible = false; P.bandana.visible = false;
+  P.goggles.visible = false; P.headphoneL.visible = false; P.headphoneR.visible = false;
+  P.mask.visible = false; P.web.visible = false; P.beard.visible = false;
+  P.antlers.visible = false; P.ponytail.visible = false;
+  P.backpack.visible = false; P.cape.visible = false; P.sack.visible = false;
+  P.tie.visible = false; P.clownNose.visible = false; P.clownFlower.visible = false;
+  P.spongeHoles.visible = false; P.hoodieCollar.visible = false;
+  
+  // Reset leg width to default
+  P.legL.thigh.scale.set(1, 1, 1); P.legR.thigh.scale.set(1, 1, 1);
+  P.legL.shin.scale.set(1, 1, 1); P.legR.shin.scale.set(1, 1, 1);
+  // Reset head scale (for sponge)
+  P.headGroup.scale.set(1, 1, 1);
+  
+  // Base materials
   CHAR_MATS.skin.color.setHex(ch.skin);
   CHAR_MATS.shirt.color.setHex(ch.shirt);
   CHAR_MATS.pants.color.setHex(ch.pants);
   CHAR_MATS.hair.color.setHex(ch.hair);
-  CHAR_MATS.shoes.color.setHex(ch.shoes);
-  CHAR_MATS.acc.color.setHex(ch.shirt);
-  P.hat.visible=false;P.capTop.visible=false;P.capBrim.visible=false;
-  P.glasses.visible=false;P.bandana.visible=false;P.goggles.visible=false;
-  P.headphoneL.visible=false;P.headphoneR.visible=false;
-  P.backpack.visible=false;P.mask.visible=false;P.web.visible=false;
-  P.cape.visible=false;P.beard.visible=false;P.antlers.visible=false;P.sack.visible=false;
-  switch(ch.access){
-    case'mask':P.mask.visible=true;break;
-    case'web':P.web.visible=true;CHAR_MATS.skin.color.setHex(0x1a1a1a);CHAR_MATS.eyeB.color.setHex(0xffffff);break;
-    case'cap':P.capTop.visible=true;P.capBrim.visible=true;break;
-    case'glasses':P.glasses.visible=true;break;
-    case'backpack':P.backpack.visible=true;break;
-    case'headphones':P.headphoneL.visible=true;P.headphoneR.visible=true;break;
-    case'bandana':P.bandana.visible=true;break;
-    case'goggles':P.goggles.visible=true;break;
-    case'hat':if(ch.hatColor)CHAR_MATS.acc.color.setHex(ch.hatColor);P.hat.visible=true;break;
-    case'cape':if(ch.capeColor)CHAR_MATS.cape.color.setHex(ch.capeColor);P.cape.visible=true;P.mask.visible=true;break;
-    case'santa':CHAR_MATS.acc.color.setHex(0xc41e3a);P.hat.visible=true;P.beard.visible=true;P.sack.visible=true;CHAR_MATS.hair.color.setHex(0xffffff);break;
-    case'antlers':P.antlers.visible=true;break;
+  CHAR_MATS.shoes.color.setHex(ch.shoeColor || 0xffffff);
+  CHAR_MATS.shoeSole.color.setHex(ch.shoeSoleColor || 0xffffff);
+  CHAR_MATS.acc.color.setHex(ch.accent || ch.shirt);
+  CHAR_MATS.hoodie.color.setHex(ch.shirt);
+  P.smile.material = CHAR_MATS.smile;
+  CHAR_MATS.eyeB.color.setHex(0x000000);
+  
+  // Style-specific
+  switch (ch.style) {
+    case 'cap':
+      P.capTop.visible = true;
+      P.capBrim.visible = true;
+      P.hoodieCollar.visible = true;
+      // Baggy pants
+      P.legL.thigh.scale.set(1.2, 1, 1.2); P.legR.thigh.scale.set(1.2, 1, 1.2);
+      P.legL.shin.scale.set(1.1, 1, 1.1); P.legR.shin.scale.set(1.1, 1, 1.1);
+      if (ch.accessory === 'backpack') P.backpack.visible = true;
+      break;
+    case 'beanie':
+      P.hat.visible = true;
+      P.glasses.visible = true;
+      P.legL.thigh.scale.set(1.2, 1, 1.2); P.legR.thigh.scale.set(1.2, 1, 1.2);
+      P.legL.shin.scale.set(1.1, 1, 1.1); P.legR.shin.scale.set(1.1, 1, 1.1);
+      if (ch.accessory === 'backpack') P.backpack.visible = true;
+      break;
+    case 'ponytail':
+      P.ponytail.visible = true;
+      // Tight leggings
+      P.legL.thigh.scale.set(0.78, 1, 0.78); P.legR.thigh.scale.set(0.78, 1, 0.78);
+      P.legL.shin.scale.set(0.85, 1, 0.85); P.legR.shin.scale.set(0.85, 1, 0.85);
+      if (ch.accessory === 'backpack') P.backpack.visible = true;
+      break;
+    case 'crown':
+      P.crown.visible = true;
+      if (ch.accessory === 'backpack') P.backpack.visible = true;
+      break;
+    case 'sponge':
+      // Make head slightly wider and hide hair for spongy look
+      P.hair.visible = false;
+      P.tie.visible = true;
+      P.spongeHoles.visible = true;
+      P.headGroup.scale.set(1.15, 1.05, 1.0);
+      break;
+    case 'clown':
+      CHAR_MATS.skin.color.setHex(0xFFFFFF);
+      CHAR_MATS.hair.color.setHex(0x2ECC71);
+      P.clownNose.visible = true;
+      P.clownFlower.visible = true;
+      P.smile.material = CHAR_MATS.clownGreen;
+      break;
   }
-  if(ch.access!=='web')CHAR_MATS.eyeB.color.setHex(0x000000);
+  
+  if (ch.style !== 'sponge') P.hair.visible = true;
+  if (ch.style !== 'clown') P.smile.material = CHAR_MATS.smile;
 }
 
-/* ============ WORLD (InstancedMesh) ============ */
+/* ============ WORLD ============ */
 const ROAD_LEN=400,SCROLL_RESET_Z=30,SCROLL_RANGE=320;
 const roadMat=new THREE.MeshStandardMaterial({color:0xAAAAAA,roughness:0.95});
 const road=new THREE.Mesh(new THREE.BoxGeometry(8.4,0.1,ROAD_LEN),roadMat);
@@ -890,16 +1274,14 @@ const curbL=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.25,ROAD_LEN),curbMat);
 curbL.position.set(-4.5,0.08,-ROAD_LEN/2+30);scene.add(curbL);
 const curbR=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.25,ROAD_LEN),curbMat);
 curbR.position.set(4.5,0.08,-ROAD_LEN/2+30);scene.add(curbR);
-
 let currentMapConfig=MAPS['xmas0'];
 let selectedMode=lsGet(LS.lastMode,'christmas');
 let selectedMapId=lsGet(LS.lastMap,'xmas0');
-if(!MAPS[selectedMapId]) selectedMapId = selectedMode==='christmas'?'xmas0':'normal0';
+if(!MAPS[selectedMapId]) selectedMapId=selectedMode==='christmas'?'xmas0':'normal0';
 
 const _tempM=new THREE.Matrix4(),_tempQ=new THREE.Quaternion(),
   _tempP=new THREE.Vector3(),_tempS=new THREE.Vector3();
 
-/* Instanced dashes */
 let dashMesh=null;const dashData=[];
 function buildDashes(cfg){
   if(dashMesh){scene.remove(dashMesh);dashMesh.geometry.dispose();dashMesh.material.dispose();dashMesh=null}
@@ -913,8 +1295,6 @@ function buildDashes(cfg){
   dashData.forEach((d,i)=>{_tempM.makeTranslation(d.x,0.04,d.z);dashMesh.setMatrixAt(i,_tempM)});
   dashMesh.instanceMatrix.needsUpdate=true;scene.add(dashMesh);
 }
-
-/* Instanced buildings */
 let buildingMesh=null;const buildingData=[];
 function buildBuildings(cfg){
   if(buildingMesh){scene.remove(buildingMesh);buildingMesh.geometry.dispose();buildingMesh.material.dispose();buildingMesh=null}
@@ -941,8 +1321,6 @@ function buildBuildings(cfg){
   buildingMesh.instanceColor=new THREE.InstancedBufferAttribute(colors,3);
   buildingMesh.instanceMatrix.needsUpdate=true;scene.add(buildingMesh);
 }
-
-/* Instanced windows */
 let windowMesh=null;const windowData=[];
 function buildWindows(cfg){
   if(windowMesh){scene.remove(windowMesh);windowMesh.geometry.dispose();windowMesh.material.dispose();windowMesh=null}
@@ -969,7 +1347,6 @@ function buildWindows(cfg){
   });
   windowMesh.instanceMatrix.needsUpdate=true;scene.add(windowMesh);
 }
-
 const scrollItems=[];
 function clearScrollItems(){
   for(const m of scrollItems){scene.remove(m);m.traverse(c=>{if(c.geometry)c.geometry.dispose()})}
@@ -1005,9 +1382,7 @@ function buildWorld(mapId){
   ambientLight.color.setHex(cfg.ambient);ambientLight.intensity=cfg.ambientIntensity;
   hemiLight.color.setHex(cfg.hemiSky);hemiLight.groundColor.setHex(cfg.hemiGround);
   dirLight.color.setHex(cfg.sunColor);dirLight.intensity=cfg.sunIntensity;
-  buildDashes(cfg);
-  buildBuildings(cfg);
-  buildWindows(cfg);
+  buildDashes(cfg);buildBuildings(cfg);buildWindows(cfg);
   if(cfg.trees&&!potatoMode&&settings.quality!=='ultra'){
     for(let i=0;i<8;i++){
       const z=-SCROLL_RESET_Z-i*22-Math.random()*4;
@@ -1046,33 +1421,25 @@ function updateWorldInstances(worldDZ){
   }
 }
 
-/* ============ COIN POOL (InstancedMesh) ============ */
+/* ============ COIN POOL ============ */
 const COIN_POOL_SIZE=40;
 const COIN_BASE_Y=0.7;
 const coinPool=Array.from({length:COIN_POOL_SIZE},()=>({
   active:false,isNoCoin:false,collected:false,warned:false,x:0,y:0,z:0,rotZ:0
 }));
 const _coinHiddenMatrix=new THREE.Matrix4().makeScale(0,0,0);
-
-/* Instanced torus (gold) */
 const coinGeom=new THREE.TorusGeometry(0.28,0.09,8,16);
 const coinMatGold=new THREE.MeshBasicMaterial({color:0xFFD700});
 const goldCoinMesh=new THREE.InstancedMesh(coinGeom,coinMatGold,COIN_POOL_SIZE);
 goldCoinMesh.count=0;goldCoinMesh.frustumCulled=false;scene.add(goldCoinMesh);
-
-/* Instanced torus (noCoin) */
 let coinMatNoCoin=new THREE.MeshBasicMaterial({color:new THREE.Color(noCoinColor)});
 const coinGeomBig=new THREE.TorusGeometry(0.28*1.8,0.09*1.8,8,16);
 const noCoinCoinMesh=new THREE.InstancedMesh(coinGeomBig,coinMatNoCoin,COIN_POOL_SIZE);
 noCoinCoinMesh.count=0;noCoinCoinMesh.frustumCulled=false;scene.add(noCoinCoinMesh);
-
-/* Cross bars and name sprites pools (individual, only in NoCoin) */
-const crossPool=[];const nameSpritePool=[];
+const crossPool=[],nameSpritePool=[];
 const crossBarGeo=new THREE.BoxGeometry(0.8*1.8,0.16*1.8,0.16*1.8);
-const crossBarGeo2=new THREE.BoxGeometry(0.8*1.8,0.16*1.8,0.16*1.8);
 const whiteCrossMat=new THREE.MeshBasicMaterial({color:0xFFFFFF});
-/* Shared name texture */
-let sharedNameTexture=null, sharedNameSpriteMat=null;
+let sharedNameTexture=null,sharedNameSpriteMat=null;
 function roundRectPath(ctx,x,y,w,h,r){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
   ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
@@ -1108,25 +1475,20 @@ function initCoinPools(){
   for(let i=0;i<COIN_POOL_SIZE;i++){
     const cg=new THREE.Group();
     const b1=new THREE.Mesh(crossBarGeo,whiteCrossMat);b1.rotation.z=Math.PI/4;
-    const b2=new THREE.Mesh(crossBarGeo2,whiteCrossMat);b2.rotation.z=-Math.PI/4;
+    const b2=new THREE.Mesh(crossBarGeo,whiteCrossMat);b2.rotation.z=-Math.PI/4;
     cg.add(b1,b2);cg.visible=false;scene.add(cg);crossPool.push(cg);
     const sp=new THREE.Sprite(sharedNameSpriteMat.clone());
     sp.visible=false;sp.scale.set(2.5,0.3125,1);scene.add(sp);nameSpritePool.push(sp);
   }
 }
 initCoinPools();
-
 function updateCoinVisuals(){
   let goldCount=0,noCoinCount=0;
   const _e=new THREE.Euler(),_q=new THREE.Quaternion(),_v3=new THREE.Vector3(),_m4=new THREE.Matrix4();
   for(let i=0;i<COIN_POOL_SIZE;i++){
-    const c=coinPool[i];
-    const cg=crossPool[i];
-    const sp=nameSpritePool[i];
+    const c=coinPool[i];const cg=crossPool[i];const sp=nameSpritePool[i];
     if(!c.active||c.collected){
-      if(cg)cg.visible=false;
-      if(sp)sp.visible=false;
-      continue;
+      if(cg)cg.visible=false;if(sp)sp.visible=false;continue;
     }
     _e.set(Math.PI/2,0,c.rotZ);_q.setFromEuler(_e);_v3.set(c.x,c.y,c.z);
     _m4.compose(_v3,_q,new THREE.Vector3(1,1,1));
@@ -1134,18 +1496,11 @@ function updateCoinVisuals(){
       noCoinCoinMesh.setMatrixAt(noCoinCount++,_m4);
       const hasName=!!noCoinName.trim();
       if(cg){cg.position.set(c.x,c.y,c.z);cg.rotation.z=c.rotZ;cg.visible=!hasName}
-      if(sp){
-        sp.position.set(c.x,c.y+0.6,c.z);
-        sp.visible=hasName;
-        if(sharedNameSpriteMat&&sp.material){
-          sp.material.map=sharedNameSpriteMat.map;
-          sp.material.needsUpdate=true;
-        }
-      }
+      if(sp){sp.position.set(c.x,c.y+0.6,c.z);sp.visible=hasName;
+        if(sharedNameSpriteMat&&sp.material){sp.material.map=sharedNameSpriteMat.map;sp.material.needsUpdate=true}}
     } else {
       goldCoinMesh.setMatrixAt(goldCount++,_m4);
-      if(cg)cg.visible=false;
-      if(sp)sp.visible=false;
+      if(cg)cg.visible=false;if(sp)sp.visible=false;
     }
   }
   for(let i=goldCount;i<COIN_POOL_SIZE;i++) goldCoinMesh.setMatrixAt(i,_coinHiddenMatrix);
@@ -1154,22 +1509,17 @@ function updateCoinVisuals(){
   goldCoinMesh.instanceMatrix.needsUpdate=true;noCoinCoinMesh.instanceMatrix.needsUpdate=true;
 }
 function getFreeCoinSlot(){for(const c of coinPool)if(!c.active)return c;return null}
-function returnCoinToPool(c){
-  c.active=false;c.collected=false;c.warned=false;
-}
+function returnCoinToPool(c){c.active=false;c.collected=false;c.warned=false}
 function activateCoinFromPool(x,y,z,isNoCoin){
   const c=getFreeCoinSlot();if(!c)return null;
   c.active=true;c.isNoCoin=isNoCoin;c.x=x;c.y=y;c.z=z;
   c.collected=false;c.warned=false;c.rotZ=Math.random()*Math.PI*2;
   return c;
 }
-
-/* Color buttons and name input */
 document.querySelectorAll('.color-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     noCoinColor=btn.dataset.color;lsSet(LS.noCoinColor,noCoinColor);
-    coinMatNoCoin.color.set(noCoinColor);
-    noCoinColorPicker.value=noCoinColor;
+    coinMatNoCoin.color.set(noCoinColor);noCoinColorPicker.value=noCoinColor;
     document.querySelectorAll('.color-btn').forEach(b=>b.classList.toggle('active',b.dataset.color===noCoinColor));
     updateNoCoinNameSprite();
   });
@@ -1195,10 +1545,9 @@ const BASE_SPEED=14;
 let distance=0,coins=0,gameSpeed=1.0;
 let lastSpeedMilestone=0,lastObstacleMilestone=0,currentSpawnInterval=1.5;
 let isJumping=false,jumpVel=0;
-/* FIX 1: lower jump — peak 0.82m. Can't escape coins vertically, clears low barrier */
 const JUMP_VEL=7.0,GRAVITY=-30;
-let isSliding=false,slideTimer=0;
-const SLIDE_DURATION=0.8;
+let isSliding=false,slideTimer=0,slideRollTime=0;
+const SLIDE_DURATION=0.8,ROLL_DURATION=0.6;
 let gameActive=false,gameOver=false;
 let spawnTimer=0;
 const SPAWN_Z=-95;
@@ -1221,12 +1570,27 @@ let cameraShake=0;
 let noCoinBreathTimer=0,noCoinBreathCooldown=0;
 let lastObstacleFreeLane=1,lastCoinSafeLane=1;
 let noCoinPatternIdx=0;
+let isNoCoinMode=false;
 
-const characterState={unlocked:['noirboy','spider','kxracer','sunny','skater'],selected:'noirboy'};
+/* Animation state */
+let nextBlinkTime=0,blinkUntil=0;
+let mouthState='normal';let mouthStateTimer=0;
+let eyebrowState=0;let eyebrowTimer=0;
+let handState='open';let handTimer=0;
+let laneLean=0,laneLeanTarget=0,leanDecayTimer=0;
+let animScaleX=1,animScaleY=1;
+let squashTimer=0,stretchTimer=0;
+let capeAngle=0;
+
+const characterState={unlocked:['cap0','beanie0','pony0','crown0','sponge'],selected:'cap0'};
 for(const c of FREE_CHARS){if(!characterState.unlocked.includes(c.id))characterState.unlocked.push(c.id)}
 const maskState={unlocked:['white'],selected:'white'};
 
 function loadPersistentStates(){
+  const legacyBest=localStorage.getItem(LS.legacyBestScore);
+  if(legacyBest!==null&&localStorage.getItem(LS.bestScoreNormal)===null){
+    lsSet(LS.bestScoreNormal,legacyBest);
+  }
   try{
     const u=lsGet(LS.unlockedMasks,null);
     if(u){const a=JSON.parse(u);if(Array.isArray(a)&&a.length){
@@ -1244,14 +1608,18 @@ function loadPersistentStates(){
       for(const c of FREE_CHARS)merged.add(c.id);
       characterState.unlocked=Array.from(merged);
     }}
-    const s=lsGet(LS.selectedChar,'noirboy');
+    const s=lsGet(LS.selectedChar,'cap0');
     if(characterState.unlocked.includes(s))characterState.selected=s;
+    else characterState.selected='cap0';
   }catch(e){}
+  if(!characterState.unlocked.includes(characterState.selected)){
+    characterState.selected = characterState.unlocked[0] || 'cap0';
+  }
 }
 function saveCharacterState(){lsSet(LS.unlockedChars,JSON.stringify(characterState.unlocked));lsSet(LS.selectedChar,characterState.selected)}
 function saveMaskState(){lsSet(LS.unlockedMasks,JSON.stringify(maskState.unlocked));lsSet(LS.selectedMask,maskState.selected)}
 
-/* ============ MISSIONS ============ */
+/* MISSIONS */
 const MISSION_DEFS=[
   {id:'run',title:'Corri 1000m',target:1000,rewardCoins:500,rewardKeys:1,unit:'m'},
   {id:'coins',title:'Raccogli 100 monete',target:100,rewardCoins:300,rewardKeys:1,unit:'🪙'},
@@ -1300,7 +1668,7 @@ function renderMissions(){
   });
 }
 
-/* ============ UI HELPERS ============ */
+/* UI HELPERS */
 function updateUI(){
   distanceEl.textContent=Math.floor(distance)+' m';
   coinEl.textContent=coins;
@@ -1310,7 +1678,11 @@ function updateUI(){
 function updateStartCurrency(){
   startCoins.textContent=getCoinsTotal();
   startKeys.textContent=lsGetNum(LS.keys,0);
-  startBest.textContent='Record: '+lsGetNum(LS.bestScore,0)+' m';
+  const bestN=lsGetNum(LS.bestScoreNormal,0);
+  const bestNC=lsGetNum(LS.bestNoCoinTime,0);
+  startBest.textContent='Record: '+bestN+' m';
+  startRecordsNormal.textContent='🏙️ Record Normale: '+bestN+' m';
+  startRecordsNoCoin.textContent='🎯 No Coin Record: '+formatTime(bestNC);
 }
 let toastTimeout=null;
 function showToast(msg){
@@ -1337,18 +1709,14 @@ function updatePowerUpHud(){
     powerupHud.classList.add('x2');powerupText.textContent='x2 MONETE '+r+'s';
   }else if(activePowerUp.type==='shield'){powerupHud.classList.add('shield');powerupText.textContent='🛡️ SCUDO'}
 }
-function refreshStartRecords(){
-  const best=lsGetNum(LS.bestScore,0),bestC=lsGetNum(LS.bestCoins,0);
-  startRecordsEl.textContent='Record: '+best+' m — '+bestC+' monete';
-  noCoinRecordBox.textContent='No Coin Record: '+formatTime(lsGetNum(LS.bestNoCoinTime,0));
-}
 function formatTime(sec){sec=Math.floor(sec);const m=Math.floor(sec/60),s=sec%60;
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
 
-/* ============ APPLY SETTINGS ============ */
+/* APPLY SETTINGS */
+let silentPixelRatio=0.8;
+let silentAdjustCooldown=0;
 function applySettings(){
   if(!renderer||!camera)return;
-  /* FIX 2: pixel ratio 0.8 default, 0.7 potato */
   let pixelCap=0.8;
   if(potatoMode)pixelCap=0.7;
   else if(settings.quality==='ultra')pixelCap=0.7;
@@ -1356,8 +1724,8 @@ function applySettings(){
   else if(settings.quality==='medium')pixelCap=0.9;
   else if(settings.quality==='high')pixelCap=1.0;
   const pr=Math.min(window.devicePixelRatio*settings.resolution,pixelCap);
+  silentPixelRatio=pr;
   renderer.setPixelRatio(pr);
-  /* FIX 2: shadows only in medium/high */
   const disableShadows=potatoMode||settings.quality==='ultra'||settings.quality==='low'||settings.quality==='medium';
   if(disableShadows){renderer.shadowMap.enabled=false;dirLight.castShadow=false;scene.fog=null}
   else{renderer.shadowMap.enabled=true;dirLight.castShadow=true;
@@ -1374,6 +1742,9 @@ function applySettings(){
   $('stretchToggle').textContent=settings.stretched?'ON':'OFF';
   $('stretchToggle').classList.toggle('on',settings.stretched);
   if(potatoToggle){potatoToggle.textContent=potatoMode?'ON':'OFF';potatoToggle.classList.toggle('on',potatoMode)}
+  // Hide outlines in potato mode
+  const showOutlines = !potatoMode && settings.quality !== 'ultra';
+  charRoot.traverse(o => { if (o.userData.isOutline) o.visible = showOutlines; });
   updateSnowAndLights();
   saveSettings();
 }
@@ -1385,16 +1756,15 @@ function setPotatoMode(on){
 }
 potatoToggle.addEventListener('click',()=>setPotatoMode(!potatoMode));
 
-/* ============ INPUT (FIX 2: zero delay, e.repeat check) ============ */
+/* INPUT */
 function triggerKeyVisual(el){el.classList.add('active');setTimeout(()=>el.classList.remove('active'),100)}
 window.addEventListener('keydown',(e)=>{
   if(e.code==='KeyW')triggerKeyVisual(keyW);
   if(e.code==='KeyA')triggerKeyVisual(keyA);
   if(e.code==='KeyS')triggerKeyVisual(keyS);
   if(e.code==='KeyD')triggerKeyVisual(keyD);
-  if(e.repeat)return; /* FIX 2: ignore held keys */
+  if(e.repeat)return;
   if(!gameActive||gameOver)return;
-  /* Immediate execution - no rAF wait */
   if(e.code==='ArrowLeft'||e.code==='KeyA'){e.preventDefault();moveLane(-1)}
   else if(e.code==='ArrowRight'||e.code==='KeyD'){e.preventDefault();moveLane(1)}
   else if(e.code==='ArrowUp'||e.code==='KeyW'||e.code==='Space'){e.preventDefault();doJump()}
@@ -1418,12 +1788,19 @@ window.addEventListener('touchend',(e)=>{
   if(ax>ay)moveLane(dx>0?1:-1);
   else{if(dy<0)doJump();else doSlide()}
 },{passive:true});
-function moveLane(dir){const next=currentLane+dir;if(next<0||next>2)return;currentLane=next;targetX=LANES[currentLane]}
+function moveLane(dir){
+  const next=currentLane+dir;
+  if(next<0||next>2)return;
+  currentLane=next;targetX=LANES[currentLane];
+  laneLeanTarget=-dir*0.436;
+  leanDecayTimer=0.18;
+}
 function doJump(){
   if(isJumping||jetpackActive)return;
   isJumping=true;jumpVel=JUMP_VEL;
   isOnTrain=false;currentTrain=null;
-  if(isSliding){isSliding=false;slideTimer=0;playerGroup.scale.y=1}
+  if(isSliding){isSliding=false;slideTimer=0;slideRollTime=0;charRoot.rotation.x=0;playerGroup.scale.y=1}
+  triggerJump();
   playJumpSound();
 }
 function spawnDustEffect(x,y,z){
@@ -1459,12 +1836,18 @@ function doSlide(){
     spawnDustEffect(playerGroup.position.x,targetY,playerGroup.position.z);
     cameraShake=0.22;playSlamSound();
     if(navigator.vibrate)navigator.vibrate(60);
+    triggerLanding();
   }
-  isSliding=true;slideTimer=SLIDE_DURATION;
-  playerGroup.scale.y=0.5;
+  isSliding=true;slideTimer=SLIDE_DURATION;slideRollTime=0;
+  playerGroup.scale.y=0.55;
 }
 
-/* ============ No Coin slalom ============ */
+function triggerJump(){stretchTimer=0.15;eyebrowState=1;eyebrowTimer=0.5;setMouth('jumpO',0.4)}
+function triggerLanding(){squashTimer=0.12;eyebrowState=-1;eyebrowTimer=0.2}
+function triggerNearMiss(){eyebrowState=-1;eyebrowTimer=0.2}
+function setMouth(state,duration){mouthState=state;mouthStateTimer=duration}
+
+/* No Coin slalom */
 const NOCOIN_SAFE_PATTERNS=[[0,2],[1]];
 function spawnNoCoinSlalom(z){
   let pattern,safeLanes;
@@ -1475,8 +1858,7 @@ function spawnNoCoinSlalom(z){
     if(minDist<=1)break;
     noCoinPatternIdx++;
   }
-  noCoinPatternIdx++;
-  lastCoinSafeLane=safeLanes[0];
+  noCoinPatternIdx++;lastCoinSafeLane=safeLanes[0];
   for(const laneIdx of pattern){
     for(let i=0;i<2;i++) activateCoinFromPool(LANES[laneIdx],COIN_BASE_Y,z-i*1.6,true);
   }
@@ -1485,7 +1867,6 @@ function spawnCoinLineNormal(x,z,count){
   for(let i=0;i<count;i++) activateCoinFromPool(x,COIN_BASE_Y,z-i*1.6,false);
 }
 
-/* ============ Train ============ */
 function createTrain(x,z,isMoving){
   const g=new THREE.Group();g.position.set(x,0,z);
   const cfg=cfgNow();
@@ -1506,7 +1887,7 @@ function createTrain(x,z,isMoving){
     }
   }
   scene.add(g);
-  obstacles.push({mesh:g,type:isMoving?'moving_train':'train',z,length:TRAIN_LENGTH,topY:TRAIN_TOP,isMoving:!!isMoving,hornPlayed:false});
+  obstacles.push({mesh:g,type:isMoving?'moving_train':'train',z,length:TRAIN_LENGTH,topY:TRAIN_TOP,isMoving:!!isMoving,hornPlayed:false,nearMissed:false});
   if(!isMoving&&gameMode==='normal'){
     for(let i=0;i<5;i++){
       const coinZ=z-TRAIN_LENGTH/2+2+i*(TRAIN_LENGTH-4)/4;
@@ -1514,8 +1895,6 @@ function createTrain(x,z,isMoving){
     }
   }
 }
-
-/* ============ Obstacle spawner ============ */
 function canSpawnAt(z,length){
   for(const o of obstacles){
     const oLen=o.length||2;
@@ -1564,8 +1943,7 @@ function spawnObstacle(){
     }
   }
   if(spawned){
-    lastSpawnDistance=distance;
-    lastObstacleFreeLane=freeLane;
+    lastSpawnDistance=distance;lastObstacleFreeLane=freeLane;
     if(gameMode==='normal'){
       if(Math.random()<0.75) spawnCoinLineNormal(LANES[Math.floor(Math.random()*3)],SPAWN_Z-14,5);
     } else {
@@ -1575,7 +1953,6 @@ function spawnObstacle(){
 }
 function pickLane(freeLane){let l=Math.floor(Math.random()*3);if(l===freeLane)l=(l+1)%3;return l}
 const cfgNow=()=>currentMapConfig||MAPS['xmas0'];
-
 function createHighBarrier(x,z){
   const g=new THREE.Group();g.position.set(x,0,z);
   const poleMat=new THREE.MeshStandardMaterial({color:0x333333,roughness:0.7,metalness:0.3});
@@ -1587,7 +1964,7 @@ function createHighBarrier(x,z){
       new THREE.MeshStandardMaterial({color:i%2===0?0xff6b6b:0xffffff,roughness:0.6}));
     stripe.position.set(-0.96+i*0.32,1.65,0);g.add(stripe);
   }
-  scene.add(g);obstacles.push({mesh:g,type:'high',z});
+  scene.add(g);obstacles.push({mesh:g,type:'high',z,nearMissed:false});
 }
 function createLowBlock(x,z){
   const g=new THREE.Group();g.position.set(x,0,z);
@@ -1597,7 +1974,7 @@ function createLowBlock(x,z){
   const edge=new THREE.Mesh(new THREE.BoxGeometry(2.05,0.1,0.56),
     new THREE.MeshStandardMaterial({color:0xFFD700,emissive:0xFFAA00,emissiveIntensity:1.0}));
   edge.position.y=0.85;g.add(edge);
-  scene.add(g);obstacles.push({mesh:g,type:'low',z});
+  scene.add(g);obstacles.push({mesh:g,type:'low',z,nearMissed:false});
 }
 function createMovingTruck(x,z){
   const g=new THREE.Group();g.position.set(x,0,z);
@@ -1608,10 +1985,8 @@ function createMovingTruck(x,z){
     new THREE.MeshStandardMaterial({color:0x4a90e2,roughness:0.7}));
   body.position.set(0,1.4,0.8);g.add(body);
   scene.add(g);
-  obstacles.push({mesh:g,type:'moving',z,baseX:x,moveTimer:Math.random()*10,moveSpeed:2.5});
+  obstacles.push({mesh:g,type:'moving',z,baseX:x,moveTimer:Math.random()*10,moveSpeed:2.5,nearMissed:false});
 }
-
-/* ============ Powerups ============ */
 function spawnPowerUp(){
   const types=['magnet','shield','x2'];
   const type=types[Math.floor(Math.random()*types.length)];
@@ -1658,10 +2033,9 @@ function activateJetpack(){
   playJetpackSound();jetpackActive=true;jetpackEndTime=Date.now()+10000;
   P.jetpackVisual.visible=true;showToast('🚀 JETPACK ATTIVATO!');
   addMissionProgress('jetpack',1);updatePowerUpHud();
+  handState='fist';handTimer=3;
 }
 function deactivateJetpack(){jetpackActive=false;P.jetpackVisual.visible=false;updatePowerUpHud()}
-
-/* ============ Train helpers ============ */
 function isOverTrain(train){
   const halfLen=(train.length||TRAIN_LENGTH)/2;
   const tz=train.mesh.position.z;
@@ -1676,7 +2050,7 @@ function findTrainUnderPlayer(){
   return null;
 }
 
-/* ============ COLLISIONS (FIX 1: wide coin hitbox, sliding collects) ============ */
+/* COLLISIONS */
 const _boxA=new THREE.Box3(),_boxB=new THREE.Box3();
 function getPlayerBox(){
   const h=isSliding?0.6:1.2;
@@ -1687,7 +2061,6 @@ function getPlayerBox(){
 function checkCollisions(){
   if(jetpackActive)return;
   const pBox=getPlayerBox();
-  /* Obstacles */
   for(let i=obstacles.length-1;i>=0;i--){
     const obs=obstacles[i];
     _boxB.setFromObject(obs.mesh);
@@ -1718,22 +2091,17 @@ function checkCollisions(){
     }
     handlePlayerHit();return;
   }
-  /* FIX 1: Coins - WIDE vertical hitbox so jumping can't escape. Only skip if player ABOVE the coin's vertical range. */
   for(const c of coinPool){
     if(!c.active||c.collected)continue;
-    /* Player must be horizontally close AND vertically overlapping */
     const dx=Math.abs(c.x-playerGroup.position.x);
     const dz=Math.abs(c.z-playerGroup.position.z);
     if(dx>0.65||dz>0.65)continue;
-    /* Wide Y overlap: from 0.05 to 2.5 for ground coins, or ±0.9 for train coins */
     const isHighCoin=c.y>2.0;
     let hitBottom,hitTop;
     if(isHighCoin){hitBottom=c.y-0.9;hitTop=c.y+0.9}
-    else{hitBottom=0.05;hitTop=2.5} /* FIX 1: wide hitbox, jumping still collects */
-    /* Player Y range */
+    else{hitBottom=0.05;hitTop=2.5}
     const pBottom=playerGroup.position.y+0.05;
     const pTop=playerGroup.position.y+0.05+(isSliding?0.6:1.2);
-    /* Overlap check */
     if(pTop<hitBottom||pBottom>hitTop)continue;
     c.collected=true;
     if(gameMode==='nocoins'){
@@ -1746,8 +2114,8 @@ function checkCollisions(){
     playCoinSound();
     if(navigator.vibrate)navigator.vibrate(20);
     updateUI();
+    setMouth('bigSmile',0.3);
   }
-  /* Powerups */
   for(let i=powerUpObjects.length-1;i>=0;i--){
     const p=powerUpObjects[i];
     _boxB.setFromObject(p.mesh);
@@ -1771,28 +2139,22 @@ function handlePlayerHit(){
   if(now-lastHitTime<HIT_INVINCIBILITY)return;
   lives--;lastHitTime=now;
   playHitSound();updateUI();
-  if(lives<=0){endGame();return}
+  if(lives<=0){endGame({reason:'obstacle'});return}
   showToast('COLPO SUBITO! -1 ❤️');
   if(navigator.vibrate)navigator.vibrate(150);
 }
-
-/* ============ Helpers ============ */
 function addCoinsToTotal(n){lsSet(LS.totalCoins,lsGetNum(LS.totalCoins,0)+n)}
 function getCoinsTotal(){return lsGetNum(LS.totalCoins,0)}
 function handleNoCoinHit(){
   noCoinActive=false;playNoCoinSound();
   if(navigator.vibrate)navigator.vibrate(200);
-  const best=lsGetNum(LS.bestNoCoinTime,0);
-  const isNew=noCoinTime>best;
-  if(isNew)lsSet(LS.bestNoCoinTime,Math.floor(noCoinTime));
-  endGame({noCoin:true,noCoinTime,isNewRecord:isNew});
+  endGame({noCoin:true,noCoinTime,reason:'coin'});
 }
 function updateNoCoinTimerDisplay(){noCoinTimerEl.textContent='TEMPO SENZA MONETE: '+formatTime(noCoinTime)}
 
-/* ============ LOOP ============ */
+/* LOOP */
 let prevFrameTime=0,lastRenderTime=0;
 let fpsAccum=0,fpsFrames=0;
-let lowFpsTime=0,lowFpsPopupShown=false,lowFpsDismissed=false;
 function gameLoop(time){
   let delta=(time-prevFrameTime)/1000;prevFrameTime=time;
   if(!isFinite(delta)||delta<=0)delta=0.016;
@@ -1801,8 +2163,12 @@ function gameLoop(time){
   updateFps(delta);
   updateDustParticles(delta);
   if(gameActive&&!gameOver)updateGame(delta);
-  else idleAnimation();
-  updateCoinVisuals(); /* FIX 2: update coin InstancedMesh matrices every frame */
+  else idleAnimation(delta);
+  updateSquashStretch(delta);
+  updateSecondaryAnimations(delta);
+  updateLaneLean(delta);
+  updateCapePhysics(delta);
+  updateCoinVisuals();
   updateCamera(delta);
   updatePowerUpHud();
   const effectiveTarget=potatoMode?40:(settings.fpsLock?45:settings.targetFPS);
@@ -1814,14 +2180,19 @@ function gameLoop(time){
 }
 renderer.setAnimationLoop(gameLoop);
 
-function idleAnimation(){
-  P.armL.shoulder.rotation.x=Math.sin(animTime*3)*0.1;
-  P.armR.shoulder.rotation.x=-Math.sin(animTime*3)*0.1;
-  P.legL.hip.rotation.x=Math.sin(animTime*3)*0.1;
-  P.legR.hip.rotation.x=-Math.sin(animTime*3)*0.1;
-  P.armL.elbow.rotation.x=0;P.armR.elbow.rotation.x=0;
-  P.legL.knee.rotation.x=0;P.legR.knee.rotation.x=0;
+function idleAnimation(delta){
+  playerGroup.rotation.x *= Math.max(0, 1 - delta * 8);
+  P.armL.shoulder.rotation.x += (Math.sin(animTime*3)*0.05 - P.armL.shoulder.rotation.x) * Math.min(1, delta*6);
+  P.armR.shoulder.rotation.x += (-Math.sin(animTime*3)*0.05 - P.armR.shoulder.rotation.x) * Math.min(1, delta*6);
+  P.legL.hip.rotation.x += (Math.sin(animTime*3)*0.05 - P.legL.hip.rotation.x) * Math.min(1, delta*6);
+  P.legR.hip.rotation.x += (-Math.sin(animTime*3)*0.05 - P.legR.hip.rotation.x) * Math.min(1, delta*6);
+  P.armL.elbow.rotation.x += (0 - P.armL.elbow.rotation.x) * Math.min(1, delta*6);
+  P.armR.elbow.rotation.x += (0 - P.armR.elbow.rotation.x) * Math.min(1, delta*6);
+  P.legL.knee.rotation.x += (0 - P.legL.knee.rotation.x) * Math.min(1, delta*6);
+  P.legR.knee.rotation.x += (0 - P.legR.knee.rotation.x) * Math.min(1, delta*6);
+  P.torso.rotation.y += (0 - P.torso.rotation.y) * Math.min(1, delta*6);
 }
+
 function updateFps(delta){
   fpsAccum+=delta;fpsFrames++;
   if(fpsAccum>=0.5){
@@ -1830,27 +2201,24 @@ function updateFps(delta){
     fpsMeter.classList.remove('warn','bad');
     if(fps<25)fpsMeter.classList.add('bad');
     else if(fps<40)fpsMeter.classList.add('warn');
-    /* FIX 2: auto-disable snow if FPS < 35 */
+    silentAdjustCooldown-=fpsAccum;
+    if(silentAdjustCooldown<=0){
+      if(fps<35&&silentPixelRatio>0.5){
+        silentPixelRatio=Math.max(0.5,silentPixelRatio-0.05);
+        renderer.setPixelRatio(silentPixelRatio);
+        silentAdjustCooldown=2;
+      } else if(fps>50&&silentPixelRatio<0.85&&!potatoMode){
+        silentPixelRatio=Math.min(0.85,silentPixelRatio+0.05);
+        renderer.setPixelRatio(silentPixelRatio);
+        silentAdjustCooldown=3;
+      }
+    }
     if(fps<35&&!snowFrozen&&!potatoMode&&selectedMode==='christmas'){
       snowFrozen=true;updateSnowAndLights();
-    } else if(fps>45&&snowFrozen&&!potatoMode){
-      snowFrozen=false;updateSnowAndLights();
-    }
-    /* FIX 2: auto potato at FPS < 35 */
-    if(fps<35&&gameActive&&!potatoMode&&!lowFpsDismissed){
-      lowFpsTime+=fpsAccum;
-      if(lowFpsTime>3&&!lowFpsPopupShown){
-        lowFpsPopupShown=true;
-        lowFpsPopup.classList.remove('hidden');
-      }
-    } else if(fps>45){
-      lowFpsTime=Math.max(0,lowFpsTime-0.4);
     }
     fpsAccum=0;fpsFrames=0;
   }
 }
-lowFpsYes.addEventListener('click',()=>{setPotatoMode(true);lowFpsPopup.classList.add('hidden');lowFpsPopupShown=true});
-lowFpsNo.addEventListener('click',()=>{lowFpsPopup.classList.add('hidden');lowFpsDismissed=true;lowFpsTime=0});
 
 function updateGame(delta){
   const prevDist=distance;
@@ -1872,6 +2240,7 @@ function updateGame(delta){
   updateUI();
   const worldDZ=BASE_SPEED*gameSpeed*delta;
   playerGroup.position.x+=(targetX-playerGroup.position.x)*Math.min(1,delta/0.12);
+
   if(jetpackActive){
     playerGroup.position.y+=(8-playerGroup.position.y)*Math.min(1,delta*3);
     if(Date.now()>jetpackEndTime)deactivateJetpack();
@@ -1892,17 +2261,34 @@ function updateGame(delta){
             playerGroup.position.y=topY;isJumping=false;jumpVel=0;
             isOnTrain=true;currentTrain=train;
             playLandOnTrainSound();
+            triggerLanding();
             if(navigator.vibrate)navigator.vibrate(30);
           }
         }
       }
-      if(playerGroup.position.y<=0){playerGroup.position.y=0;isJumping=false;jumpVel=0}
+      if(playerGroup.position.y<=0){
+        playerGroup.position.y=0;isJumping=false;jumpVel=0;
+        triggerLanding();
+      }
     } else if(playerGroup.position.y>0.1){
       playerGroup.position.y+=(0-playerGroup.position.y)*Math.min(1,delta*4);
     }
   }
-  if(isSliding){slideTimer-=delta;if(slideTimer<=0){isSliding=false;playerGroup.scale.y=1}}
-  animateRun();
+  if(isSliding){
+    slideTimer-=delta;
+    slideRollTime+=delta;
+    const rollP=Math.min(1,slideRollTime/ROLL_DURATION);
+    const eased=1-Math.pow(1-rollP,3);
+    charRoot.rotation.x=-Math.PI*2*eased;
+    if(slideTimer<=0){
+      isSliding=false;slideRollTime=0;
+      charRoot.rotation.x=0;
+      playerGroup.scale.y=1;
+    }
+  }
+
+  animateRun(delta);
+
   powerUpSpawnTimer+=delta;jetpackSpawnTimer+=delta;
   if(gameMode==='normal'){
     if(powerUpSpawnTimer>=nextPowerUpInterval){powerUpSpawnTimer=0;
@@ -1931,9 +2317,8 @@ function updateGame(delta){
   for(const m of scrollItems){
     m.position.z+=worldDZ*(m.userData.cloudFactor||1);
     if(m.position.z>SCROLL_RESET_Z)m.position.z-=SCROLL_RANGE;
-    m.visible=Math.abs(m.position.z-camera.position.z)<60; /* FIX 2: 60m culling */
+    m.visible=Math.abs(m.position.z-camera.position.z)<60;
   }
-  /* Obstacles */
   for(let i=obstacles.length-1;i>=0;i--){
     const o=obstacles[i];
     let extraSpeed=0;
@@ -1947,13 +2332,16 @@ function updateGame(delta){
       o.moveTimer+=delta;
       o.mesh.position.x=o.baseX+Math.sin(o.moveTimer*o.moveSpeed)*2.2;
     }
-    o.mesh.visible=o.mesh.position.z>-50; /* FIX 2: 50m culling */
+    if(!o.nearMissed && o.z > 0 && o.z < 2 && !isOnTrain) {
+      o.nearMissed = true;
+      triggerNearMiss();
+    }
+    o.mesh.visible=o.mesh.position.z>-50;
     if(o.z>16){
       scene.remove(o.mesh);o.mesh.traverse(c=>{if(c.geometry)c.geometry.dispose()});
       obstacles.splice(i,1);
     }
   }
-  /* Coins update */
   for(const c of coinPool){
     if(!c.active)continue;
     c.z+=worldDZ;
@@ -1964,7 +2352,6 @@ function updateGame(delta){
     }
     if(c.z>16)returnCoinToPool(c);
   }
-  /* Powerups */
   for(let i=powerUpObjects.length-1;i>=0;i--){
     const p=powerUpObjects[i];
     p.z+=worldDZ;p.mesh.position.z+=worldDZ;
@@ -1989,36 +2376,160 @@ function updateGame(delta){
   if(tutorialTimer<5){tutorialTimer+=delta;if(tutorialTimer>=5)tutorialEl.style.opacity='0'}
 }
 
-function animateRun(){
-  const speed=16;
+function animateRun(delta){
   if(isSliding){
-    P.legL.hip.rotation.x=0.7;P.legR.hip.rotation.x=-0.6;
-    P.legL.knee.rotation.x=0.8;P.legR.knee.rotation.x=0.3;
-    P.armL.shoulder.rotation.x=-1.1;P.armR.shoulder.rotation.x=-1.1;
-    P.armL.elbow.rotation.x=0.5;P.armR.elbow.rotation.x=0.5;
-    P.headGroup.rotation.x=0.2;
-  } else if(isJumping||isOnTrain||jetpackActive){
-    P.legL.hip.rotation.x=-0.5;P.legR.hip.rotation.x=0.3;
-    P.legL.knee.rotation.x=0.7;P.legR.knee.rotation.x=0.2;
-    P.armL.shoulder.rotation.x=-1.0;P.armR.shoulder.rotation.x=-1.0;
-    P.armL.elbow.rotation.x=0.5;P.armR.elbow.rotation.x=0.5;
-    P.headGroup.rotation.x=-0.05;
-  } else {
-    const t=animTime*speed;const swing=Math.sin(t);
-    P.legL.hip.rotation.x=swing*1.1;P.legR.hip.rotation.x=-swing*1.1;
-    P.legL.knee.rotation.x=Math.max(0,-swing)*1.2+0.15;
-    P.legR.knee.rotation.x=Math.max(0,swing)*1.2+0.15;
-    P.armL.shoulder.rotation.x=-swing*1.0;P.armR.shoulder.rotation.x=swing*1.0;
-    P.armL.elbow.rotation.x=0.8+Math.sin(t+0.5)*0.3;
-    P.armR.elbow.rotation.x=0.8+Math.sin(t+Math.PI+0.5)*0.3;
-    playerGroup.rotation.x=-0.17;
-    P.headGroup.position.y=2.42+Math.abs(Math.sin(t*2))*0.04;
-    if(!isJumping&&!isOnTrain)playerGroup.position.y=Math.abs(Math.sin(t*2))*0.05;
+    P.legL.hip.rotation.x=1.2;P.legR.hip.rotation.x=1.2;
+    P.legL.knee.rotation.x=1.5;P.legR.knee.rotation.x=1.5;
+    P.armL.shoulder.rotation.x=-1.4;P.armR.shoulder.rotation.x=-1.4;
+    P.armL.elbow.rotation.x=0.9;P.armR.elbow.rotation.x=0.9;
+    P.headGroup.rotation.x=0;
+    return;
   }
-  const eyeShift=(targetX-playerGroup.position.x)*0.15;
-  P.pupilL.position.x=-0.15+eyeShift;
-  P.pupilR.position.x=0.15+eyeShift;
+  if(isJumping||isOnTrain||jetpackActive){
+    const targetHip=-1.4,targetKnee=1.5,targetShoulder=-2.3,targetElbow=0.3;
+    P.legL.hip.rotation.x+=(targetHip-P.legL.hip.rotation.x)*Math.min(1,delta*12);
+    P.legR.hip.rotation.x+=(targetHip-P.legR.hip.rotation.x)*Math.min(1,delta*12);
+    P.legL.knee.rotation.x+=(targetKnee-P.legL.knee.rotation.x)*Math.min(1,delta*12);
+    P.legR.knee.rotation.x+=(targetKnee-P.legR.knee.rotation.x)*Math.min(1,delta*12);
+    P.armL.shoulder.rotation.x+=(targetShoulder-P.armL.shoulder.rotation.x)*Math.min(1,delta*12);
+    P.armR.shoulder.rotation.x+=(targetShoulder-P.armR.shoulder.rotation.x)*Math.min(1,delta*12);
+    P.armL.elbow.rotation.x+=(targetElbow-P.armL.elbow.rotation.x)*Math.min(1,delta*12);
+    P.armR.elbow.rotation.x+=(targetElbow-P.armR.elbow.rotation.x)*Math.min(1,delta*12);
+    P.headGroup.rotation.x=-0.1;
+    return;
+  }
+  const runTime=animTime;
+  const runSpeed=12;
+  const t=runTime*runSpeed;
+  const legPhase=Math.sin(t);
+  const legPhaseR=Math.sin(t+Math.PI);
+  const armPhase=legPhaseR;
+  const armPhaseR=legPhase;
+
+  P.legL.hip.rotation.x=legPhase*1.2;
+  P.legR.hip.rotation.x=legPhaseR*1.2;
+  P.legL.knee.rotation.x=-(Math.max(0,-legPhase)*1.5+0.1);
+  P.legR.knee.rotation.x=-(Math.max(0,-legPhaseR)*1.5+0.1);
+  P.armL.shoulder.rotation.x=armPhase*1.0;
+  P.armR.shoulder.rotation.x=armPhaseR*1.0;
+  P.armL.elbow.rotation.x=0.85+Math.sin(t)*0.15;
+  P.armR.elbow.rotation.x=0.85+Math.sin(t+Math.PI)*0.15;
+
+  playerGroup.rotation.x+=(-0.2-playerGroup.rotation.x)*Math.min(1,delta*8);
+
+  P.headGroup.position.y=2.42+Math.abs(Math.sin(t*2))*0.06;
+  if(!isJumping&&!isOnTrain){
+    playerGroup.position.y=Math.abs(Math.sin(t*2))*0.06;
+  }
+  P.torso.rotation.y=Math.sin(t)*0.12;
+
+  const handScale=(handState==='fist')?0.7:1.0;
+  P.armL.hand.scale.setScalar(handScale);
+  P.armR.hand.scale.setScalar(handScale);
 }
+
+function updateSecondaryAnimations(delta){
+  const t=animTime*12;
+  const now=Date.now();
+
+  if(now>nextBlinkTime){
+    nextBlinkTime=now+2000+Math.random()*2000;
+    blinkUntil=now+150;
+  }
+  const isBlinking=now<blinkUntil||isSliding;
+  const eyeScaleY=isBlinking?0.1:1;
+  P.eyeWL.scale.y=eyeScaleY;
+  P.eyeWR.scale.y=eyeScaleY;
+  P.glintL.visible=!isBlinking;
+  P.glintR.visible=!isBlinking;
+
+  const eyeShift=(targetX-playerGroup.position.x)*0.15;
+  P.pupilL.position.x=-0.17+eyeShift;
+  P.pupilR.position.x=0.17+eyeShift;
+  P.glintL.position.x=-0.20+eyeShift;
+  P.glintR.position.x=0.14+eyeShift;
+
+  if(eyebrowTimer>0){eyebrowTimer-=delta;if(eyebrowTimer<=0)eyebrowState=0;}
+  const baseY=0.21;
+  if(eyebrowState===1){
+    P.eyebrowL.position.y=baseY+0.06;
+    P.eyebrowR.position.y=baseY+0.06;
+    P.eyebrowL.rotation.z=0.25;
+    P.eyebrowR.rotation.z=-0.25;
+  } else if(eyebrowState===-1){
+    P.eyebrowL.position.y=baseY-0.035;
+    P.eyebrowR.position.y=baseY-0.035;
+    P.eyebrowL.rotation.z=-0.3;
+    P.eyebrowR.rotation.z=0.3;
+  } else {
+    P.eyebrowL.position.y=baseY;
+    P.eyebrowR.position.y=baseY;
+    P.eyebrowL.rotation.z=0;
+    P.eyebrowR.rotation.z=0;
+  }
+
+  if(mouthStateTimer>0){mouthStateTimer-=delta;if(mouthStateTimer<=0)mouthState='normal';}
+  if(mouthState==='jumpO'){
+    P.smile.visible=false;
+    P.mouthOpen.visible=true;
+    P.mouthOpen.scale.setScalar(1);
+  } else if(mouthState==='bigSmile'){
+    P.smile.visible=true;
+    P.mouthOpen.visible=false;
+    P.smile.scale.set(1.4,1.4,1);
+  } else {
+    P.smile.visible=true;
+    P.mouthOpen.visible=false;
+    P.smile.scale.set(1,1,1);
+  }
+
+  const hairBase=gameActive&&!gameOver?-0.3:0;
+  P.hair.rotation.x=hairBase+Math.sin(t)*0.08;
+
+  P.torso.scale.z=1+Math.sin(t)*0.02;
+  P.torso.scale.x=1+Math.cos(t*1.3)*0.015;
+
+  if(handTimer>0){handTimer-=delta;if(handTimer<=0)handState='open';}
+
+  if(P.capTop.visible){P.capTop.rotation.z=0.18+Math.sin(t*0.8)*0.05;P.capBrim.rotation.z=0.18+Math.sin(t*0.8)*0.05;}
+  if(P.hat.visible)P.hat.rotation.z=Math.sin(t*0.8)*0.05;
+  if(P.beard.visible)P.beard.rotation.x=Math.sin(t*2)*0.05;
+}
+
+function updateSquashStretch(delta){
+  if(squashTimer>0){
+    squashTimer-=delta;
+    const p=1-Math.max(0,squashTimer/0.12);
+    const s=Math.sin(p*Math.PI);
+    animScaleY=1-s*0.15;
+    animScaleX=1+s*0.15;
+  } else if(stretchTimer>0){
+    stretchTimer-=delta;
+    const p=1-Math.max(0,stretchTimer/0.15);
+    const s=Math.sin(p*Math.PI);
+    animScaleY=1+s*0.12;
+    animScaleX=1-s*0.08;
+  } else {
+    animScaleY+=(1-animScaleY)*Math.min(1,delta*15);
+    animScaleX+=(1-animScaleX)*Math.min(1,delta*15);
+  }
+  charRoot.scale.set(0.6*animScaleX,0.6*animScaleY,0.6*animScaleX);
+}
+
+function updateLaneLean(delta){
+  if(leanDecayTimer>0){leanDecayTimer-=delta;if(leanDecayTimer<=0)laneLeanTarget=0;}
+  laneLean+=(laneLeanTarget-laneLean)*Math.min(1,delta*10);
+  charRoot.rotation.z=laneLean;
+}
+
+function updateCapePhysics(delta){
+  const targetCapeAngle=(gameActive&&!gameOver)?0.55:0;
+  capeAngle+=(targetCapeAngle-capeAngle)*Math.min(1,delta*5);
+  if(P.cape.visible){
+    P.cape.rotation.x=capeAngle+Math.sin(animTime*8)*0.05;
+  }
+}
+
 function updateCamera(delta){
   const k=Math.min(1,delta/0.12);
   camera.position.x+=(playerGroup.position.x-camera.position.x)*k;
@@ -2044,7 +2555,7 @@ function updateCamera(delta){
   }
 }
 
-/* ============ RESET / START / END ============ */
+/* RESET / START / END */
 function resetGame(){
   for(const o of obstacles){scene.remove(o.mesh);o.mesh.traverse(c=>{if(c.geometry)c.geometry.dispose()})}
   obstacles.length=0;
@@ -2058,7 +2569,8 @@ function resetGame(){
   distance=0;coins=0;gameSpeed=1.0;
   lastSpeedMilestone=0;lastObstacleMilestone=0;currentSpawnInterval=1.5;
   currentLane=1;targetX=LANES[1];
-  isJumping=false;isSliding=false;jumpVel=0;slideTimer=0;
+  isJumping=false;isSliding=false;jumpVel=0;slideTimer=0;slideRollTime=0;
+  charRoot.rotation.x=0;charRoot.rotation.z=0;
   isOnTrain=false;currentTrain=null;
   lastSpawnDistance=-100;
   lastObstacleFreeLane=1;lastCoinSafeLane=1;noCoinPatternIdx=0;
@@ -2067,12 +2579,25 @@ function resetGame(){
   jetpackSpawnTimer=0;
   lives=2;lastHitTime=0;
   noCoinTime=0;noCoinActive=(gameMode==='nocoins');
+  isNoCoinMode=(gameMode==='nocoins');
   noCoinBreathTimer=0;noCoinBreathCooldown=0;
   updateNoCoinTimerDisplay();
+  mouthState='normal';mouthStateTimer=0;
+  eyebrowState=0;eyebrowTimer=0;
+  handState='open';handTimer=0;
+  laneLean=0;laneLeanTarget=0;leanDecayTimer=0;
+  animScaleX=1;animScaleY=1;squashTimer=0;stretchTimer=0;
+  capeAngle=0;
+  charRoot.scale.set(0.6,0.6,0.6);
   playerGroup.position.set(0,0,0);
   playerGroup.scale.set(1,1,1);
   playerGroup.rotation.set(0,0,0);
   P.headGroup.position.y=2.42;
+  P.legL.hip.rotation.x=0;P.legR.hip.rotation.x=0;
+  P.legL.knee.rotation.x=0;P.legR.knee.rotation.x=0;
+  P.armL.shoulder.rotation.x=0;P.armR.shoulder.rotation.x=0;
+  P.armL.elbow.rotation.x=0;P.armR.elbow.rotation.x=0;
+  P.torso.rotation.y=0;
   camera.position.set(0,2.8,6.5);
   camera.lookAt(0,1.0,-10);
   tutorialEl.style.opacity='1';
@@ -2080,10 +2605,11 @@ function resetGame(){
   if(gameMode==='nocoins')noCoinTimerEl.classList.remove('hidden');
   else noCoinTimerEl.classList.add('hidden');
   updateUI();updatePowerUpHud();
-  lowFpsTime=0;lowFpsPopupShown=false;lowFpsDismissed=false;
-  lowFpsPopup.classList.add('hidden');
   snowFrozen=false;
   updateSnowAndLights();
+  silentPixelRatio=Math.min(window.devicePixelRatio*settings.resolution,potatoMode?0.7:0.8);
+  renderer.setPixelRatio(silentPixelRatio);
+  silentAdjustCooldown=2;
 }
 function startGame(){
   if(gameActive)return;
@@ -2108,35 +2634,53 @@ function startGame(){
 function endGame(opts){
   if(gameOver)return;
   gameOver=true;gameActive=false;noCoinActive=false;
-  if(opts&&opts.noCoin){
-    gameOverTitle.textContent='HAI PRESO UNA MONETA!';
-    finalScoreEl.textContent='Tempo: '+formatTime(opts.noCoinTime);
-    finalCoinsEl.textContent='—';
-    newRecordMsg.style.display=opts.isNewRecord?'block':'none';
-    if(opts.isNewRecord)newRecordMsg.textContent='NUOVO RECORD NO-COIN!';
+  const isNC=isNoCoinMode||(gameMode==='nocoins')||(opts&&opts.noCoin);
+  if(isNC){
     const best=lsGetNum(LS.bestNoCoinTime,0);
-    gameOverRecordsEl.textContent='Record No-Coin: '+formatTime(best)+' / Questa: '+formatTime(opts.noCoinTime);
+    const isNew=noCoinTime>best;
+    if(isNew)lsSet(LS.bestNoCoinTime,Math.floor(noCoinTime));
+    const bestCoins=lsGetNum(LS.bestCoinsNoCoin,0);
+    if(coins>bestCoins)lsSet(LS.bestCoinsNoCoin,coins);
+    gameOverTitle.textContent=(opts&&opts.noCoin)?'HAI PRESO UNA MONETA!':'GAME OVER — NO COIN';
+    finalScoreEl.textContent='Tempo: '+formatTime(noCoinTime);
+    finalCoinsEl.textContent=coins;
+    newRecordMsg.style.display=isNew?'block':'none';
+    if(isNew)newRecordMsg.textContent='NUOVO RECORD NO-COIN!';
+    const bestT=lsGetNum(LS.bestNoCoinTime,0);
+    gameOverRecordsEl.innerHTML='🎯 <strong>Record No Coin: '+formatTime(bestT)+'</strong><br>Questa: '+formatTime(noCoinTime);
+    gameOverRecordsEl.className='records-box nocoin';
     gameOverScreen.classList.remove('hidden');
-    playNoCoinSound();return;
+    playNoCoinSound();
+    refreshStartRecordsAndUpdate();
+    return;
   }
   playCrashSound();
   if(navigator.vibrate)navigator.vibrate(200);
   const finalScore=Math.floor(distance),finalCoins=coins;
-  const bestScore=lsGetNum(LS.bestScore,0),bestCoins=lsGetNum(LS.bestCoins,0);
+  const bestNormal=lsGetNum(LS.bestScoreNormal,0);
+  const bestCoinsNormal=lsGetNum(LS.bestCoinsNormal,0);
   let newRecord=false;
-  if(finalScore>bestScore){lsSet(LS.bestScore,finalScore);newRecord=true}
-  if(finalCoins>bestCoins)lsSet(LS.bestCoins,finalCoins);
+  if(finalScore>bestNormal){lsSet(LS.bestScoreNormal,finalScore);newRecord=true}
+  if(finalCoins>bestCoinsNormal)lsSet(LS.bestCoinsNormal,finalCoins);
   finalScoreEl.textContent=finalScore+' m';
   finalCoinsEl.textContent=finalCoins;
   gameOverTitle.textContent='GAME OVER';
   newRecordMsg.style.display=newRecord?'block':'none';
   if(newRecord)newRecordMsg.textContent='NUOVO RECORD!';
-  gameOverRecordsEl.textContent='Record: '+Math.max(bestScore,finalScore)+' m — '+Math.max(bestCoins,finalCoins)+' monete / Questa: '+finalScore+' m — '+finalCoins;
+  gameOverRecordsEl.innerHTML='🏙️ <strong>Record Normale: '+Math.max(bestNormal,finalScore)+' m</strong><br>Questa: '+finalScore+' m — '+finalCoins+' monete';
+  gameOverRecordsEl.className='records-box normal';
   gameOverScreen.classList.remove('hidden');
-  refreshStartRecords();updateStartCurrency();
+  refreshStartRecordsAndUpdate();
+}
+function refreshStartRecordsAndUpdate(){
+  const bestN=lsGetNum(LS.bestScoreNormal,0);
+  const bestNC=lsGetNum(LS.bestNoCoinTime,0);
+  startRecordsNormal.textContent='🏙️ Record Normale: '+bestN+' m';
+  startRecordsNoCoin.textContent='🎯 No Coin Record: '+formatTime(bestNC);
+  updateStartCurrency();
 }
 
-/* ============ MAP GRID (mode filtered) ============ */
+/* MAP GRID */
 let currentMapMode='christmas';
 function renderMapGrid(mode){
   currentMapMode=mode;
@@ -2167,7 +2711,7 @@ function renderMapGrid(mode){
   });
 }
 
-/* ============ WARDROBE ============ */
+/* WARDROBE */
 let wardrobeScene=null,wardrobeCamera=null,wardrobeRenderer=null;
 let wardrobeModel=null,wardrobeIndex=0,wardrobeRot=0;
 function initWardrobeRenderer(){
@@ -2189,21 +2733,86 @@ function initWardrobeRenderer(){
 function buildWardrobeModel(ch){
   if(wardrobeModel)wardrobeScene.remove(wardrobeModel);
   const g=new THREE.Group();
-  const skinMat=new THREE.MeshStandardMaterial({color:ch.skin,roughness:0.65});
-  const shirtMat=new THREE.MeshStandardMaterial({color:ch.shirt,roughness:0.7});
-  const pantsMat=new THREE.MeshStandardMaterial({color:ch.pants,roughness:0.85});
-  const hairMat=new THREE.MeshStandardMaterial({color:ch.hair,roughness:0.75});
-  const shoesMat=new THREE.MeshStandardMaterial({color:ch.shoes,roughness:0.4});
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.32,14,14),skinMat);head.position.y=1.45;g.add(head);
-  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.34,14,14,0,Math.PI*2,0,Math.PI*0.55),hairMat);
-  hair.position.y=1.5;g.add(hair);
-  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.5,6,12),shirtMat);torso.position.y=0.95;g.add(torso);
-  [-1,1].forEach(sign=>{const arm=new THREE.Mesh(new THREE.CapsuleGeometry(0.09,0.5,4,8),skinMat);
-    arm.position.set(sign*0.4,0.95,0);arm.rotation.z=sign*0.15;g.add(arm)});
-  [-1,1].forEach(sign=>{const leg=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.55,4,8),pantsMat);
-    leg.position.set(sign*0.15,0.45,0);g.add(leg);
-    const shoe=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.12,0.35),shoesMat);
-    shoe.position.set(sign*0.15,0.06,-0.06);g.add(shoe)});
+  const skinMat=toonMat(ch.skin);
+  const shirtMat=toonMat(ch.shirt);
+  const pantsMat=toonMat(ch.pants);
+  const hairMat=toonMat(ch.hair);
+  const shoeMat=toonMat(ch.shoeColor||0xffffff);
+  const soleMat=toonMat(ch.shoeSoleColor||0xffffff);
+  const accentMat=toonMat(ch.accent||ch.shirt);
+  // Big head
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.42,16,16),skinMat);head.position.y=1.55;g.add(head);
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.44,14,14,0,Math.PI*2,0,Math.PI*0.55),hairMat);
+  hair.position.y=1.60;g.add(hair);
+  // Big eyes
+  const eyeW=new THREE.MeshBasicMaterial({color:0xffffff});
+  const eyeB=new THREE.MeshBasicMaterial({color:0x000000});
+  const eL=new THREE.Mesh(new THREE.SphereGeometry(0.13,10,10),eyeW);eL.position.set(-0.14,1.57,-0.32);g.add(eL);
+  const eR=new THREE.Mesh(new THREE.SphereGeometry(0.13,10,10),eyeW);eR.position.set(0.14,1.57,-0.32);g.add(eR);
+  const pL=new THREE.Mesh(new THREE.SphereGeometry(0.075,8,8),eyeB);pL.position.set(-0.14,1.57,-0.40);g.add(pL);
+  const pR=new THREE.Mesh(new THREE.SphereGeometry(0.075,8,8),eyeB);pR.position.set(0.14,1.57,-0.40);g.add(pR);
+  // Small smile
+  const smile=new THREE.Mesh(new THREE.TorusGeometry(0.11,0.022,6,12,Math.PI),new THREE.MeshBasicMaterial({color:0xcc3333}));
+  smile.position.set(0,1.38,-0.38);smile.rotation.x=Math.PI;smile.rotation.z=Math.PI;g.add(smile);
+  // Short torso
+  const torso=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.30,0.55,12),shirtMat);torso.position.y=0.95;g.add(torso);
+  // Short arms
+  [-1,1].forEach(sign=>{
+    const arm=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.085,0.30,8),skinMat);
+    arm.position.set(sign*0.38,0.95,0);arm.rotation.z=sign*0.15;g.add(arm);
+    const hand=new THREE.Mesh(new THREE.SphereGeometry(0.10,8,8),skinMat);
+    hand.position.set(sign*0.42,0.76,0);g.add(hand);
+  });
+  // Short legs
+  [-1,1].forEach(sign=>{
+    const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,0.45,8),pantsMat);
+    leg.position.set(sign*0.15,0.40,0);g.add(leg);
+  });
+  // HUGE shoes
+  [-1,1].forEach(sign=>{
+    const sole=new THREE.Mesh(new THREE.BoxGeometry(0.28,0.08,0.50),soleMat);
+    sole.position.set(sign*0.15,0.02,-0.05);g.add(sole);
+    const upper=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.35,0.45),shoeMat);
+    upper.position.set(sign*0.15,0.24,-0.06);g.add(upper);
+  });
+  // Accessories based on style
+  if(ch.style==='cap'||ch.style==='beanie'){
+    if(ch.style==='cap'){
+      const cap=new THREE.Mesh(new THREE.CylinderGeometry(0.40,0.40,0.14,12),accentMat);
+      cap.position.y=1.92;cap.rotation.z=0.15;g.add(cap);
+      const brim=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.05,0.35),accentMat);
+      brim.position.set(0,1.86,-0.32);brim.rotation.z=0.15;g.add(brim);
+    } else {
+      const beanie=new THREE.Mesh(new THREE.SphereGeometry(0.44,14,10,0,Math.PI*2,0,Math.PI*0.7),accentMat);
+      beanie.position.y=1.72;g.add(beanie);
+    }
+  }
+  if(ch.style==='beanie'){
+    const gl=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.16,0.05),new THREE.MeshBasicMaterial({color:0x1a1a1a}));
+    gl.position.set(0,1.55,-0.40);g.add(gl);
+  }
+  if(ch.style==='ponytail'){
+    const pony=new THREE.Mesh(new THREE.BoxGeometry(0.10,0.45,0.10),hairMat);
+    pony.position.set(0,1.62,0.32);g.add(pony);
+  }
+  if(ch.style==='crown'){
+    const crownBase=new THREE.Mesh(new THREE.CylinderGeometry(0.36,0.36,0.10,8),new THREE.MeshStandardMaterial({color:0xFFD700,roughness:0.4,metalness:0.6}));
+    crownBase.position.y=1.95;g.add(crownBase);
+    for(let i=0;i<5;i++){
+      const spike=new THREE.Mesh(new THREE.ConeGeometry(0.06,0.16,4),new THREE.MeshStandardMaterial({color:0xFFD700,roughness:0.4,metalness:0.6}));
+      const ang=(i/5)*Math.PI*2;
+      spike.position.set(Math.cos(ang)*0.30,2.05,Math.sin(ang)*0.30);
+      g.add(spike);
+    }
+  }
+  if(ch.style==='sponge'){
+    const tie=new THREE.Mesh(new THREE.BoxGeometry(0.07,0.22,0.04),new THREE.MeshStandardMaterial({color:0xFF0000}));
+    tie.position.set(0,1.05,-0.28);g.add(tie);
+  }
+  if(ch.style==='clown'){
+    const nose=new THREE.Mesh(new THREE.SphereGeometry(0.06,8,8),new THREE.MeshStandardMaterial({color:0xFF0000,emissive:0x440000,emissiveIntensity:0.4}));
+    nose.position.set(0,1.53,-0.42);g.add(nose);
+  }
   wardrobeModel=g;wardrobeScene.add(g);
 }
 function renderWardrobe(){
@@ -2239,7 +2848,7 @@ wEquip.addEventListener('click',()=>{const u=CHARACTERS.filter(c=>characterState
   characterState.selected=ch.id;saveCharacterState();applyCharacter(ch.id);
   renderWardrobe();showToast('PERSONAGGIO EQUIPAGGIATO')});
 
-/* ============ SHOP ============ */
+/* SHOP */
 let currentShopTab='characters';
 function renderShop(){
   shopCoins.textContent='🪙 '+getCoinsTotal()+' · 🔑 '+lsGetNum(LS.keys,0);
@@ -2312,7 +2921,7 @@ document.querySelectorAll('.shop-tab').forEach(t=>{
 });
 shopCloseButton.addEventListener('click',()=>shopScreen.classList.add('hidden'));
 
-/* ============ MENU ============ */
+/* MENU */
 menuBtns.forEach(btn=>{
   btn.addEventListener('click',()=>{
     const act=btn.dataset.act;ensureAudio();
@@ -2328,10 +2937,9 @@ modeBigBtns.forEach(btn=>{
   btn.addEventListener('click',()=>{
     const mode=btn.dataset.playmode;
     ensureAudio();
-    /* Switch to last map of this mode if any */
-    const savedMap=lsGet(mode==='christmas'?LS.selectedMapChristmas:LS.selectedMapNormal,'');
-    if(savedMap&&MAPS[savedMap])selectedMapId=savedMap;
-    else selectedMapId=mode==='christmas'?'xmas0':'normal0';
+    if(!(MAPS[selectedMapId]&&MAPS[selectedMapId].mode===mode)){
+      selectedMapId=mode==='christmas'?'xmas0':'normal0';
+    }
     lsSet(LS.lastMode,mode);
     renderMapGrid(mode);
     mapScreen.classList.remove('hidden');
@@ -2353,7 +2961,7 @@ restartButton.addEventListener('click',()=>{
 menuButton.addEventListener('click',()=>{
   gameOverScreen.classList.add('hidden');
   gameOver=false;gameActive=false;
-  refreshStartRecords();updateStartCurrency();
+  refreshStartRecordsAndUpdate();
   startScreen.style.display='flex';
 });
 settingsButton.addEventListener('click',()=>settingsPanel.classList.remove('hidden'));
@@ -2378,14 +2986,13 @@ $('stretchToggle').addEventListener('click',()=>{
   settings.stretched=!settings.stretched;saveSettings();applySettings();
 });
 
-/* ============ INIT ============ */
+/* INIT */
 loadSettings();
 loadPersistentStates();
 loadMissions();
 applyCharacter(characterState.selected);
 updateMuteButton();
-refreshStartRecords();
-updateStartCurrency();
+refreshStartRecordsAndUpdate();
 updateUI();
 selectedMode=MAPS[selectedMapId]?MAPS[selectedMapId].mode:'christmas';
 buildWorld(selectedMapId);
